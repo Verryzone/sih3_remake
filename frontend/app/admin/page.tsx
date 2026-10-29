@@ -95,7 +95,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Welcome Banner */}
-      <div className="rounded-xl bg-gradient-to-r from-[#0A2140] to-[#14396A] p-6 text-white shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="rounded-xl bg-gradient-to-r from-[#000080] to-[#4682B4] p-6 text-white shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
             Selamat Datang, {user?.name || "Administrator"}!

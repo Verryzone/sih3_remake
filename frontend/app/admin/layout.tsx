@@ -18,7 +18,7 @@ import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
 const NAV_ADMIN = [
-  { label: "Ringkasan", href: "/admin", icon: LayoutDashboard },
+  { label: "Menu Utama", href: "/admin", icon: LayoutDashboard },
   { label: "Pos Pemantauan", href: "/admin/pos", icon: Radio },
   { label: "Pengukuran & Sensor", href: "/admin/pengukuran", icon: Activity },
   { label: "Dokumen Publikasi", href: "/admin/dokumen", icon: FileText },
@@ -35,13 +35,11 @@ export default function AdminLayout({
   const { user, isLoading, logout } = useAuth();
 
   useEffect(() => {
-    // If auth state is resolved and no user, redirect to login
     if (!isLoading && !user && pathname !== "/admin/login") {
       router.push("/admin/login");
     }
   }, [user, isLoading, pathname, router]);
 
-  // If this is the login page, render children without sidebar
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
@@ -70,7 +68,7 @@ export default function AdminLayout({
     <div className="min-h-[calc(100vh-140px)] bg-[#F8FAFC] flex flex-col md:flex-row">
       {/* Sidebar Admin */}
       <aside className="w-full md:w-64 bg-white border-r border-[#E2E8F0] shrink-0">
-        <div className="p-5 border-b border-[#E2E8F0] bg-[#0A2140] text-white">
+        <div className="p-5 border-b border-[#E2E8F0] bg-gradient-to-r from-[#4682B4] to-[#000080] text-white">
           <div className="flex items-center gap-2.5">
             <div className="p-1.5 rounded-lg bg-amber-500 text-[#0A2140] font-bold">
               <Shield className="w-5 h-5" />
@@ -109,7 +107,7 @@ export default function AdminLayout({
                 className={cn(
                   "flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors",
                   active
-                    ? "bg-[#0E2A4E] text-white shadow-sm font-semibold"
+                    ? "bg-gradient-to-r from-[#000080] to-[#4682B4] text-white shadow-sm font-semibold"
                     : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 )}
               >
