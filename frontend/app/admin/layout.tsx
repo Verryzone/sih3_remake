@@ -68,7 +68,7 @@ export default function AdminLayout({
     <div className="min-h-[calc(100vh-140px)] bg-[#F8FAFC] flex flex-col md:flex-row">
       {/* Sidebar Admin */}
       <aside className="w-full md:w-64 bg-white border-r border-[#E2E8F0] shrink-0">
-        <div className="p-5 border-b border-[#E2E8F0] bg-gradient-to-r from-[#4682B4] to-[#000080] text-white">
+        <div className="p-5 border-b border-[#E2E8F0] bg-gradient-to-r from-[#00008B] to-[#000080] text-white">
           <div className="flex items-center gap-2.5">
             <div className="p-1.5 rounded-lg bg-amber-500 text-[#0A2140] font-bold">
               <Shield className="w-5 h-5" />

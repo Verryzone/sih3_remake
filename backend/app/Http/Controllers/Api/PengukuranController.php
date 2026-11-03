@@ -80,6 +80,49 @@ class PengukuranController extends Controller
     }
 
     /**
+     * Batch store measurements from CSV import (tanpa mengubah struktur database)
+     */
+    public function batchStore(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'pos_id' => 'required|exists:pos,id',
+            'records' => 'required|array|min:1',
+            'records.*.recorded_at' => 'required|date',
+            'records.*.nilai' => 'required|numeric',
+            'records.*.satuan' => 'nullable|string|max:50',
+            'records.*.status_siaga' => 'nullable|string|in:Normal,Waspada,Siaga,Awas',
+        ]);
+
+        $posId = $validated['pos_id'];
+        $now = now();
+        $insertData = [];
+
+        foreach ($validated['records'] as $item) {
+            $insertData[] = [
+                'pos_id' => $posId,
+                'recorded_at' => Carbon::parse($item['recorded_at'])->format('Y-m-d H:i:s'),
+                'nilai' => $item['nilai'],
+                'satuan' => $item['satuan'] ?? 'mm',
+                'status_siaga' => $item['status_siaga'] ?? 'Normal',
+                'parameter_tambahan' => null,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        // Chunk insert 500 rows at a time
+        foreach (array_chunk($insertData, 500) as $chunk) {
+            Pengukuran::insert($chunk);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => count($insertData) . ' data pengukuran berhasil diimpor.',
+            'count' => count($insertData),
+        ], 201);
+    }
+
+    /**
      * Delete measurement
      */
     public function destroy(int|string $id): JsonResponse

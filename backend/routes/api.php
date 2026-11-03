@@ -54,6 +54,7 @@ Route::prefix('v1')->group(function () {
         // Pengukuran CRUD
         Route::get('/pengukuran', [PengukuranController::class, 'index']);
         Route::post('/pengukuran', [PengukuranController::class, 'store']);
+        Route::post('/pengukuran/batch', [PengukuranController::class, 'batchStore']);
         Route::delete('/pengukuran/{id}', [PengukuranController::class, 'destroy']);
     });
 });
