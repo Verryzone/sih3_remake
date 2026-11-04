@@ -89,9 +89,11 @@ export default function BuletinMainPage() {
         <p className="mt-1 text-[13px] text-[#5B6675]">Edisi terbaru dari setiap kategori buletin. Klik kartu untuk melihat seluruh edisi.</p>
 
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
-          {buletinData.map((item) => (
+          {buletinData.map((item, index) => (
             <Link
               key={item.id}
+              data-reveal
+              style={{ "--reveal-delay": `${Math.min(index, 5) * 50}ms` } as React.CSSProperties}
               href={`/galeri/buletin/${item.categorySlug}`}
               className="group flex flex-col justify-between rounded-[8px] border border-[#D5DBE3] bg-white p-4 transition-all hover:border-[#AEB8C5] hover:shadow-[0_2px_10px_rgba(14,42,78,0.08)]"
             >

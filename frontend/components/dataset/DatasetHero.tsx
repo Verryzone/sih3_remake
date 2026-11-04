@@ -30,18 +30,24 @@ export function DatasetHero({
       <div className="absolute inset-0 bg-[#0A2140]/78" />
 
       <Container className="relative">
-        <div className="mx-auto max-w-[760px] text-center">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#F2A900]">
+        {/* key: animasi diputar ulang saat judul berganti di halaman yang sama (mis. kategori buletin). */}
+        <div key={title} className="mx-auto max-w-[760px] text-center">
+          <p className="hero-rise text-[12px] font-semibold uppercase tracking-[0.14em] text-[#F2A900]">
             {kicker}
           </p>
-          <h1 className="mt-2 text-[28px] font-semibold leading-[1.2] tracking-[-0.015em] text-white sm:text-[36px] lg:text-[40px]">
+          <h1
+            className="hero-rise mt-2 text-[28px] font-semibold leading-[1.2] tracking-[-0.015em] text-white sm:text-[36px] lg:text-[40px]"
+            style={{ "--hero-delay": "80ms" } as React.CSSProperties}
+          >
             {title}
           </h1>
           <div
             aria-hidden="true"
-            className="mx-auto mt-4 mb-4 h-[3px] w-12 rounded-full bg-[#F2A900]"
+            className="hero-line mx-auto mt-4 mb-4 h-[3px] w-12 rounded-full bg-[#F2A900]"
+            style={{ "--hero-delay": "160ms" } as React.CSSProperties}
           />
-          <p className="mx-auto line-clamp-4 max-w-[620px] text-[14px] leading-relaxed text-[#C9D6E8] sm:line-clamp-3 sm:text-[15px]">
+          <p style={{ "--hero-delay": "220ms" } as React.CSSProperties}
+            className="hero-rise mx-auto line-clamp-4 max-w-[620px] text-[14px] leading-relaxed text-[#C9D6E8] sm:line-clamp-3 sm:text-[15px]">
             {description}
           </p>
         </div>

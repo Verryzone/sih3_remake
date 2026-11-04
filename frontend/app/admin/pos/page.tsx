@@ -347,8 +347,8 @@ export default function AdminPosPage() {
       </section>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A2140]/60 p-4">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[8px] bg-white">
+        <div className="anim-fade fixed inset-0 z-50 flex items-center justify-center bg-[#0A2140]/60 p-4">
+          <div className="anim-pop w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[8px] bg-white">
             <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-[#D5DBE3] bg-white px-5 py-3.5">
               <h3 className="text-[15px] font-semibold text-[#1B2430]">
                 {editingPos ? "Ubah Data Pos Pemantauan" : "Tambah Pos Pemantauan Baru"}

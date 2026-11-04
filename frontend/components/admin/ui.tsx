@@ -115,7 +115,7 @@ export function AdminModal({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A2140]/60 p-4"
+      className="anim-fade fixed inset-0 z-50 flex items-center justify-center bg-[#0A2140]/60 p-4"
       onClick={onClose}
     >
       <div
@@ -123,7 +123,7 @@ export function AdminModal({
         aria-modal="true"
         aria-label={title}
         onClick={(e) => e.stopPropagation()}
-        className={`flex max-h-[90vh] w-full flex-col overflow-hidden rounded-[8px] bg-white ${wide ? "max-w-2xl" : "max-w-lg"}`}
+        className={`anim-pop flex max-h-[90vh] w-full flex-col overflow-hidden rounded-[8px] bg-white ${wide ? "max-w-2xl" : "max-w-lg"}`}
       >
         <div className="flex items-center justify-between gap-4 border-b border-[#D5DBE3] px-5 py-3.5">
           <h2 className="text-[15px] font-semibold text-[#1B2430]">{title}</h2>

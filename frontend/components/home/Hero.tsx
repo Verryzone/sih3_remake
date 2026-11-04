@@ -21,15 +21,21 @@ export function Hero() {
       {/* Hero content */}
       <Container className="relative">
         <div className="max-w-[660px]">
-          <h1 className="text-[28px] font-semibold leading-[1.2] tracking-[-0.015em] text-white sm:text-[36px] lg:text-[40px]">
+          <h1 className="hero-rise text-[28px] font-semibold leading-[1.2] tracking-[-0.015em] text-white sm:text-[36px] lg:text-[40px]">
             Portal Satu Data Hidrologi, Hidrometeorologi, dan Hidrogeologi
           </h1>
-          <p className="mt-4 mb-7 max-w-[520px] text-[15px] leading-relaxed text-[#C9D6E8] sm:text-[17px]">
+          <p style={{ "--hero-delay": "80ms" } as React.CSSProperties} className="hero-rise mt-4 mb-7 max-w-[520px] text-[15px] leading-relaxed text-[#C9D6E8] sm:text-[17px]">
             Layanan informasi dan keterbukaan data sumber daya air Wilayah Sungai
             Serayu Opak dan Serayu Bogowonto.
           </p>
 
-          <form action="/data-explorer" method="get" role="search">
+          <form
+            action="/data-explorer"
+            method="get"
+            role="search"
+            className="hero-rise"
+            style={{ "--hero-delay": "160ms" } as React.CSSProperties}
+          >
             <label
               htmlFor="q"
               className="block mb-1.5 text-[13px] font-medium text-white"
@@ -53,7 +59,7 @@ export function Hero() {
             </div>
           </form>
 
-          <div className="mt-2.5 text-[13px] text-[#C9D6E8]">
+          <div className="hero-rise mt-2.5 text-[13px] text-[#C9D6E8]" style={{ "--hero-delay": "220ms" } as React.CSSProperties}>
             Contoh: Kranggan, Sermo, DAS Progo
           </div>
         </div>

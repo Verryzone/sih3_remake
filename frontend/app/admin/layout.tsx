@@ -112,7 +112,7 @@ function ProfileMenu({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-50 mt-2 w-60 overflow-hidden rounded-[6px] border border-[#D5DBE3] bg-white shadow-md"
+          className="anim-drop absolute right-0 top-full z-50 mt-2 w-60 overflow-hidden rounded-[6px] border border-[#D5DBE3] bg-white shadow-md"
         >
           <div className="border-b border-[#E9EDF2] px-4 py-3">
             <p className="truncate text-[13px] font-semibold text-[#1B2430]">{name}</p>
@@ -214,11 +214,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {drawerOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div
-            className="absolute inset-0 bg-[#0A2140]/60"
+            className="anim-fade absolute inset-0 bg-[#0A2140]/60"
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
-          <aside className="relative h-full w-64 bg-[#0E2A4E]">
+          <aside className="anim-slide-left relative h-full w-64 bg-[#0E2A4E]">
             <button
               type="button"
               onClick={() => setDrawerOpen(false)}

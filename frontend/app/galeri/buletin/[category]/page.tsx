@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { use, useState } from "react";
 import Link from "next/link";
 import { Download, ExternalLink, X } from "lucide-react";
@@ -1858,10 +1860,12 @@ export default function SubBuletinPage({
 
         {listBBWS.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {listBBWS.map((item) => (
+            {listBBWS.map((item, index) => (
               <div
                 key={item.id}
-                className="flex flex-col justify-between rounded-xl bg-white p-4 shadow-sm transition hover:shadow-md border border-slate-100"
+                data-reveal
+                style={{ "--reveal-delay": `${Math.min(index, 5) * 50}ms` } as React.CSSProperties}
+                className="flex flex-col justify-between rounded-[8px] border border-[#D5DBE3] bg-white p-4 transition-all hover:border-[#AEB8C5] hover:shadow-[0_2px_10px_rgba(14,42,78,0.08)]"
               >
                 <div
                   onClick={() => setSelectedEdisi(item)}
@@ -1966,10 +1970,12 @@ export default function SubBuletinPage({
             </div>
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {listBMKGYogya.map((item) => (
+              {listBMKGYogya.map((item, index) => (
                 <div
                   key={item.id}
-                  className="flex flex-col justify-between rounded-xl bg-white p-4 shadow-sm transition hover:shadow-md border border-slate-100"
+                  data-reveal
+                  style={{ "--reveal-delay": `${Math.min(index, 5) * 50}ms` } as React.CSSProperties}
+                  className="flex flex-col justify-between rounded-[8px] border border-[#D5DBE3] bg-white p-4 transition-all hover:border-[#AEB8C5] hover:shadow-[0_2px_10px_rgba(14,42,78,0.08)]"
                 >
                   <div
                     onClick={() => setSelectedEdisi(item)}
@@ -2069,10 +2075,12 @@ export default function SubBuletinPage({
             </div>
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {listBMKGJateng.map((item) => (
+              {listBMKGJateng.map((item, index) => (
                 <div
                   key={item.id}
-                  className="flex flex-col justify-between rounded-xl bg-white p-4 shadow-sm transition hover:shadow-md border border-slate-100"
+                  data-reveal
+                  style={{ "--reveal-delay": `${Math.min(index, 5) * 50}ms` } as React.CSSProperties}
+                  className="flex flex-col justify-between rounded-[8px] border border-[#D5DBE3] bg-white p-4 transition-all hover:border-[#AEB8C5] hover:shadow-[0_2px_10px_rgba(14,42,78,0.08)]"
                 >
                   <div
                     onClick={() => setSelectedEdisi(item)}

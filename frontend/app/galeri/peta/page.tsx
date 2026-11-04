@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronRight, X } from "lucide-react";
@@ -448,9 +450,11 @@ export default function GaleriPetaPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {tampil.map((peta) => (
+            {tampil.map((peta, index) => (
               <article
                 key={peta.id}
+                data-reveal
+                style={{ "--reveal-delay": `${Math.min(index, 5) * 50}ms` } as React.CSSProperties}
                 className="flex flex-col overflow-hidden rounded-[8px] border border-[#D5DBE3] bg-white transition-all hover:border-[#AEB8C5] hover:shadow-[0_2px_10px_rgba(14,42,78,0.08)]"
               >
                 <button type="button" onClick={() => setTerpilih(peta)} className="block w-full border-b border-[#E9EDF2] bg-[#F5F7FA] p-3" aria-label={`Lihat ${peta.judul}`}>

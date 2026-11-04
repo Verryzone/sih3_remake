@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { DatasetHero } from "@/components/dataset/DatasetHero";
@@ -1411,9 +1413,11 @@ export default function AlbumKegiatanPage() {
         {/* 3 GRID SEJAJAR DI BAWAH */}
         {threeGridItems.length > 0 && (
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {threeGridItems.map((item) => (
+            {threeGridItems.map((item, index) => (
               <div
                 key={item.id}
+                data-reveal
+                style={{ "--reveal-delay": `${Math.min(index, 5) * 50}ms` } as React.CSSProperties}
                 className="group cursor-pointer overflow-hidden rounded-[8px] bg-white border border-[#D5DBE3] transition-all hover:border-[#AEB8C5] hover:shadow-[0_2px_10px_rgba(14,42,78,0.08)]"
                 onClick={() => handleOpenModal(item)}
               >

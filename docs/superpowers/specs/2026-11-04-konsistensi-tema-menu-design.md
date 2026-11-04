@@ -47,3 +47,15 @@ PRD: `docs/superpowers/prd/2026-11-04-konsistensi-tema-menu.md`
 - **Tab/filter mengikuti `DatasetPage`:** pill `h-8 rounded-full border-[#AEB8C5]`, aktif `bg-[#14396A] text-white`.
 - Pengecualian yang tetap: warna status/error (rose), indikator online (emerald), tombol YouTube.
 - Subhalaman `/galeri/buletin/[category]` ikut disesuaikan.
+
+## Revisi 2 (animasi hero)
+- Teks hero masuk bertahap saat halaman dibuka: kicker 0ms → judul 80ms → garis amber 160ms (scaleX) → deskripsi 220ms.
+- Durasi 520ms, easing `cubic-bezier(0.22, 0.61, 0.36, 1)` — sama dengan `RevealOnScroll`.
+- Kelas `.hero-rise` / `.hero-line` di `app/globals.css`, jeda via variabel `--hero-delay`.
+- Hanya dipasang untuk `prefers-reduced-motion: no-preference`; foto hero tidak dianimasikan agar tidak berkedip.
+- `key={title}` pada konten hero agar animasi diputar ulang saat judul berganti di halaman yang sama.
+- Berlaku di semua menu (`DatasetHero`) dan Beranda (`Hero`).
+
+## Revisi 3 (cakupan animasi)
+- Publik: hero (Revisi 2) + scroll reveal `data-reveal` (stagger 50ms, maks 250ms) di kartu Galeri: Buletin, Buletin per kategori, Peta, Album. Tabel data dan baris hasil filter **tidak** dianimasikan.
+- Admin: tanpa animasi masuk halaman. Mikro-animasi fungsional saja: modal (`anim-fade` latar + `anim-pop` panel, 150–170ms), dropdown profil (`anim-drop`), drawer mobile (`anim-slide-left`, 200ms). Menutup tetap instan.
