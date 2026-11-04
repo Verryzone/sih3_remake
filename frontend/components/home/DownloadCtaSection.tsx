@@ -24,7 +24,7 @@ export function DownloadCtaSection() {
                 Buka Data Explorer
               </Link>
               <Link
-                href="/publikasi"
+                href="/galeri/dokumen"
                 className="inline-flex h-11 items-center justify-center rounded-[6px] border border-[#8FA6C4] bg-transparent px-5 text-[15px] font-semibold text-white hover:bg-white/10 transition-colors"
               >
                 Dokumen dan SOP

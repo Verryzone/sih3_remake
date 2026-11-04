@@ -360,7 +360,7 @@ export default function AnalisisDataPage() {
     <>
       {/* 1. HERO SECTION DENGAN IDENTITAS PUPR */}
       <DatasetHero
-        kicker="Portal SIH3 Wilayah Sungai Serayu Opak"
+        kicker="Portal SIH3"
         title="Analisis & Perbandingan Data"
         description="Bandingkan fluktuasi dan tren pengukuran tinggi muka air, curah hujan, maupun kualitas air dari berbagai pos pemantauan secara simultan."
       />
@@ -384,9 +384,9 @@ export default function AnalisisDataPage() {
           </nav>
 
           {/* 3. CARD FILTER & PARAMETER SELECTION */}
-          <section className="rounded-xl border border-hairline bg-white shadow-sm overflow-hidden transition-all duration-200">
+          <section className="rounded-[8px] border border-hairline bg-white shadow-sm overflow-hidden transition-all duration-200">
             {/* Header Filter Bar */}
-            <div className="border-b border-hairline bg-slate-50/70 px-5 py-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
+            <div className="border-b border-hairline bg-[#F5F7FA] px-5 py-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-[16px] font-semibold text-ink">
                   Parameter & Filter Perbandingan
@@ -480,7 +480,7 @@ export default function AnalisisDataPage() {
                     )}
                   </div>
 
-                  <div className="max-h-[280px] overflow-y-auto space-y-1.5 rounded-lg border border-hairline bg-slate-50/50 p-2.5 sm:p-3 scrollbar-thin">
+                  <div className="max-h-[280px] overflow-y-auto space-y-1.5 rounded-lg border border-hairline bg-[#F5F7FA] p-2.5 sm:p-3 scrollbar-thin">
                     {memuatPos ? (
                       <div className="py-8 text-center text-xs text-ink-muted flex flex-col items-center justify-center gap-2">
                         <RefreshCw className="w-4 h-4 animate-spin text-primary" />
@@ -499,8 +499,8 @@ export default function AnalisisDataPage() {
                               isSelected
                                 ? "bg-white border-primary shadow-xs ring-1 ring-primary/20"
                                 : isDisabled
-                                ? "opacity-50 cursor-not-allowed bg-slate-100/60 border-transparent"
-                                : "bg-white border-slate-200/80 hover:border-primary/40 hover:bg-slate-50"
+                                ? "opacity-50 cursor-not-allowed bg-[#EEF1F5] border-transparent"
+                                : "bg-white border-[#D5DBE3] hover:border-primary/40 hover:bg-[#F0F3F7]"
                             }`}
                           >
                             <input
@@ -515,7 +515,7 @@ export default function AnalisisDataPage() {
                                 <span className="font-semibold text-ink truncate">
                                   {pos.nama}
                                 </span>
-                                <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 shrink-0">
+                                <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-[6px] bg-[#EEF1F5] text-[#3D4756] shrink-0">
                                   {pos.jenis}
                                 </span>
                               </div>
@@ -538,7 +538,7 @@ export default function AnalisisDataPage() {
               </div>
 
               {/* Kolom Kanan: Periode Tanggal & Tombol Bandingkan (5 Cols) */}
-              <div className="lg:col-span-5 flex flex-col justify-between space-y-5 bg-slate-50/70 p-4 sm:p-5 rounded-xl border border-slate-200/80">
+              <div className="lg:col-span-5 flex flex-col justify-between space-y-5 bg-[#F5F7FA] p-4 sm:p-5 rounded-[8px] border border-[#D5DBE3]">
                 <div className="space-y-4">
                   <div>
                     <label className="block text-xs font-semibold text-ink uppercase tracking-wider mb-2">
@@ -555,7 +555,7 @@ export default function AnalisisDataPage() {
                           key={preset.label}
                           type="button"
                           onClick={() => setRentangCepat(preset.hari)}
-                          className="px-2 py-1.5 rounded-md border border-hairline bg-white hover:bg-primary/5 hover:border-primary/40 text-ink text-[11px] font-medium transition-colors"
+                          className="px-2 py-1.5 rounded-[6px] border border-hairline bg-white hover:bg-primary/5 hover:border-primary/40 text-ink text-[11px] font-medium transition-colors"
                         >
                           {preset.label}
                         </button>
@@ -594,7 +594,7 @@ export default function AnalisisDataPage() {
 
                   {/* Chip Ringkasan Pos Terpilih */}
                   {posTerpilih.length > 0 && (
-                    <div className="pt-2 border-t border-slate-200">
+                    <div className="pt-2 border-t border-[#D5DBE3]">
                       <span className="text-[11px] font-medium text-ink-muted block mb-1.5">
                         Stasiun yang akan dianalisis:
                       </span>
@@ -606,7 +606,7 @@ export default function AnalisisDataPage() {
                           return (
                             <span
                               key={id}
-                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white border shadow-2xs"
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-[11px] font-semibold bg-white border shadow-2xs"
                               style={{ borderColor: `${color}40`, color: color }}
                             >
                               <span
@@ -637,7 +637,7 @@ export default function AnalisisDataPage() {
                     type="button"
                     onClick={muatDataPerbandingan}
                     disabled={memuat || posTerpilih.length < 2}
-                    className="w-full inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-amber px-5 text-sm font-semibold text-[#0E2A4E] shadow-sm transition-all hover:bg-amber-dark disabled:pointer-events-none disabled:opacity-50 cursor-pointer active:scale-[0.99]"
+                    className="w-full inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-amber px-5 text-sm font-semibold text-[#0E2A4E] shadow-sm transition-all hover:bg-amber-dark disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
                   >
                     {memuat ? (
                       <>
@@ -689,7 +689,7 @@ export default function AnalisisDataPage() {
                     return (
                       <div
                         key={item.pos.id}
-                        className="relative overflow-hidden rounded-xl border border-hairline bg-white p-4 shadow-sm hover:shadow-md transition-shadow duration-200"
+                        className="relative overflow-hidden rounded-[8px] border border-hairline bg-white p-4 shadow-sm hover:shadow-md transition-shadow duration-200"
                       >
                         <div
                           className="absolute top-0 left-0 right-0 h-1"
@@ -721,7 +721,7 @@ export default function AnalisisDataPage() {
                         </div>
 
                         <div className="mt-3.5 grid grid-cols-2 gap-2 pt-3 border-t border-slate-100 text-xs">
-                          <div className="bg-slate-50 rounded-lg p-2">
+                          <div className="bg-[#F5F7FA] rounded-lg p-2">
                             <span className="text-[10px] font-semibold uppercase text-slate-500 block">
                               Minimum
                             </span>
@@ -731,7 +731,7 @@ export default function AnalisisDataPage() {
                                 : "—"}
                             </span>
                           </div>
-                          <div className="bg-slate-50 rounded-lg p-2">
+                          <div className="bg-[#F5F7FA] rounded-lg p-2">
                             <span className="text-[10px] font-semibold uppercase text-slate-500 block">
                               Maksimum
                             </span>
@@ -741,7 +741,7 @@ export default function AnalisisDataPage() {
                                 : "—"}
                             </span>
                           </div>
-                          <div className="bg-slate-50 rounded-lg p-2">
+                          <div className="bg-[#F5F7FA] rounded-lg p-2">
                             <span className="text-[10px] font-semibold uppercase text-slate-500 block">
                               Rata-Rata
                             </span>
@@ -751,7 +751,7 @@ export default function AnalisisDataPage() {
                                 : "—"}
                             </span>
                           </div>
-                          <div className="bg-slate-50 rounded-lg p-2">
+                          <div className="bg-[#F5F7FA] rounded-lg p-2">
                             <span className="text-[10px] font-semibold uppercase text-slate-500 block">
                               Data Valid
                             </span>
@@ -767,7 +767,7 @@ export default function AnalisisDataPage() {
               </section>
 
               {/* GRAFIK PERBANDINGAN PENGUKURAN */}
-              <section className="rounded-xl border border-hairline bg-white p-5 sm:p-6 shadow-sm space-y-4">
+              <section className="rounded-[8px] border border-hairline bg-white p-5 sm:p-6 shadow-sm space-y-4">
                 <div className="border-b border-hairline pb-4">
                   <h2 className="text-[17px] font-semibold text-ink">
                     Grafik Perbandingan Tren Pengukuran
@@ -876,7 +876,7 @@ export default function AnalisisDataPage() {
               </section>
 
               {/* TABEL DATA HASIL PERBANDINGAN */}
-              <section className="rounded-xl border border-hairline bg-white p-5 sm:p-6 shadow-sm space-y-4">
+              <section className="rounded-[8px] border border-hairline bg-white p-5 sm:p-6 shadow-sm space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-hairline pb-4">
                   <div>
                     <h2 className="text-[17px] font-semibold text-ink">
@@ -920,7 +920,7 @@ export default function AnalisisDataPage() {
                         return (
                           <tr
                             key={`${pos.id}-${item.id}-${index}`}
-                            className="hover:bg-slate-50/80 transition-colors"
+                            className="hover:bg-[#F0F3F7] transition-colors"
                           >
                             <td className="py-3 px-4">
                               <div className="flex items-center gap-2">
@@ -951,7 +951,7 @@ export default function AnalisisDataPage() {
                                 : "—"}
                             </td>
                             <td className="py-3 px-4 text-slate-600">
-                              <span className="inline-block px-2 py-0.5 rounded bg-slate-100 font-medium text-[11px]">
+                              <span className="inline-block px-2 py-0.5 rounded bg-[#EEF1F5] font-medium text-[11px]">
                                 {item.satuan || "-"}
                               </span>
                             </td>
@@ -988,7 +988,7 @@ export default function AnalisisDataPage() {
                         setHalamanTabel((prev) => Math.max(1, prev - 1))
                       }
                       disabled={halamanTabel === 1}
-                      className="px-3 py-1.5 rounded-md border border-hairline bg-white hover:bg-slate-50 text-ink disabled:opacity-40 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-[6px] border border-hairline bg-white hover:bg-[#F0F3F7] text-ink disabled:opacity-40 transition-colors cursor-pointer"
                     >
                       Sebelumnya
                     </button>
@@ -1005,7 +1005,7 @@ export default function AnalisisDataPage() {
                         )
                       }
                       disabled={halamanTabel >= totalHalaman}
-                      className="px-3 py-1.5 rounded-md border border-hairline bg-white hover:bg-slate-50 text-ink disabled:opacity-40 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-[6px] border border-hairline bg-white hover:bg-[#F0F3F7] text-ink disabled:opacity-40 transition-colors cursor-pointer"
                     >
                       Berikutnya
                     </button>
@@ -1056,7 +1056,7 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
                     className="w-2.5 h-2.5 rounded-full shrink-0"
                     style={{ backgroundColor: entry.color || "#14396A" }}
                   />
-                  <span className="font-medium text-slate-700">
+                  <span className="font-medium text-[#3D4756]">
                     {entry.name}:
                   </span>
                 </span>

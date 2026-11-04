@@ -1,7 +1,10 @@
-
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { ChevronRight, Download, Eye, FileText, Search, X } from "lucide-react";
+import { DatasetHero } from "@/components/dataset/DatasetHero";
+import { Container } from "@/components/layout/Container";
 import data from "./data.json";
 
 type Dokumen = {
@@ -12,23 +15,20 @@ type Dokumen = {
 };
 
 const kategori = [
-  {
-    id: "1",
-    nama: "Peraturan Perundang-undangan",
-  },
-  {
-    id: "2",
-    nama: "Peraturan Kebijakan & Produk Hukum Khusus",
-  },
-  {
-    id: "3",
-    nama: "Dokumen Non-Peraturan Perundang-undangan",
-  },
-  {
-    id: "4",
-    nama: "Publikasi Edukasi & Informasi Hukum Publik",
-  },
+  { id: "1", nama: "Peraturan Perundang-undangan" },
+  { id: "2", nama: "Peraturan Kebijakan & Produk Hukum Khusus" },
+  { id: "3", nama: "Dokumen Non-Peraturan Perundang-undangan" },
+  { id: "4", nama: "Publikasi Edukasi & Informasi Hukum Publik" },
 ];
+
+const pillBase = "inline-flex h-8 items-center rounded-full px-3 text-[13px] font-medium";
+const pillActive = "border border-[#14396A] bg-[#14396A] text-white";
+const pillIdle =
+  "border border-[#AEB8C5] bg-white text-[#1B2430] hover:border-[#14396A] hover:text-[#14396A]";
+const btnOutline =
+  "inline-flex h-8 items-center gap-1.5 rounded-[6px] border border-[#AEB8C5] bg-white px-3 text-[13px] font-medium text-[#1B2430] hover:bg-[#F0F3F7]";
+const btnPrimary =
+  "inline-flex h-8 items-center gap-1.5 rounded-[6px] border border-[#14396A] bg-[#14396A] px-3 text-[13px] font-semibold text-white hover:bg-[#0E2A4E]";
 
 export default function GaleriDokumenPage() {
   const [pencarian, setPencarian] = useState("");
@@ -38,206 +38,188 @@ export default function GaleriDokumenPage() {
   const dokumen = data.dokumen as Dokumen[];
 
   const hasil = useMemo(() => {
-  const keyword = pencarian.toLowerCase().trim();
-
-  return dokumen.filter((item) => {
-    const nomorKategori = item.nomor.split(".")[0];
-
-    const sesuaiKategori =
-      kategoriAktif === "Semua" ||
-      nomorKategori === kategoriAktif;
-
-    const sesuaiPencarian =
-      !keyword ||
-      item.judul.toLowerCase().includes(keyword) ||
-      item.nomor.toLowerCase().includes(keyword) ||
-      item.pencarian.toLowerCase().includes(keyword);
-
-    return sesuaiKategori && sesuaiPencarian;
-  });
-}, [dokumen, pencarian, kategoriAktif]);
+    const keyword = pencarian.toLowerCase().trim();
+    return dokumen.filter((item) => {
+      const sesuaiKategori = kategoriAktif === "Semua" || item.nomor.split(".")[0] === kategoriAktif;
+      const sesuaiPencarian =
+        !keyword ||
+        item.judul.toLowerCase().includes(keyword) ||
+        item.nomor.toLowerCase().includes(keyword) ||
+        item.pencarian.toLowerCase().includes(keyword);
+      return sesuaiKategori && sesuaiPencarian;
+    });
+  }, [dokumen, pencarian, kategoriAktif]);
 
   return (
-    <main className="min-h-screen bg-slate-50 pb-20"> 
-    <section
-      className="relative flex min-h-[370px] items-center justify-center overflow-hidden bg-cover bg-center px-6 py-16 text-center text-white"
-      style={{
-        
-backgroundImage:
-  "linear-gradient(rgba(8, 22, 40, 0.68), rgba(8, 22, 40, 0.68)), url('/images/hero-bendungan.jpg')",
+    <>
+      <DatasetHero
+        kicker="Galeri"
+        title="Publikasi Dokumen"
+        description="Peraturan, prosedur, dan dokumen pengelolaan hidrologi Wilayah Sungai Serayu Opak."
+      />
 
-      }}
-    >
-      <div className="relative z-10 mx-auto max-w-4xl">
-        <p className="mb-3 text-sm font-bold uppercase tracking-[0.16em] text-amber-400">
-          PORTAL SIH3
-        </p>
+      <main className="min-h-screen bg-page pb-16">
+        <Container className="py-8 sm:py-10">
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-4 flex items-center gap-1.5 text-[12px] font-medium text-[#5B6675]"
+          >
+            <Link href="/" className="hover:text-[#0B5CAD]">
+              Beranda
+            </Link>
+            <ChevronRight aria-hidden="true" className="h-3 w-3 text-[#AEB8C5]" />
+            <span className="text-[#1B2430]">Dokumen</span>
+          </nav>
 
-        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
-          Publikasi Dokumen
-        </h1>
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B5CAD]">
+                Dokumen
+              </p>
+              <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.01em] text-[#1B2430] sm:text-[26px]">
+                Regulasi dan publikasi
+              </h2>
+              <p className="mt-1 text-[13px] text-[#5B6675]">
+                Menampilkan {hasil.length} dari {dokumen.length} dokumen
+              </p>
+            </div>
 
-        <div className="mx-auto mt-5 h-1 w-10 bg-yellow-400" />
+            <label className="relative w-full sm:w-72">
+              <span className="sr-only">Cari dokumen</span>
+              <Search
+                aria-hidden="true"
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A96A6]"
+              />
+              <input
+                type="search"
+                value={pencarian}
+                onChange={(e) => setPencarian(e.target.value)}
+                placeholder="Cari judul atau nomor…"
+                className="h-9 w-full rounded-[6px] border border-[#AEB8C5] bg-white pl-9 pr-3 text-[13px] text-[#1B2430] placeholder:text-[#8A96A6] focus:border-[#0B5CAD] focus:outline-none focus:ring-2 focus:ring-[#0B5CAD]/20"
+              />
+            </label>
+          </div>
 
-        <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-200 md:text-lg">
-          Peraturan, prosedur, dan dokumen pengelolaan hidrologi
-          Wilayah Sungai Serayu Opak.
-        </p>
-      </div>
-    </section>
-
-
-      <section className="mx-auto max-w-6xl px-5 pt-10">
-        <div className="mb-7 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex flex-col gap-4 md:flex-row">
-            
-            <input
-              type="search"
-              value={pencarian}
-              onChange={(event) => setPencarian(event.target.value)}
-              placeholder="Cari judul dokumen..."
-              className="w-full flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-800"
-            />
-
-            <select
-              value={kategoriAktif}
-              onChange={(event) =>
-                setKategoriAktif(event.target.value)
-              }
-              className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-sky-600"
+          <div className="mb-6 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setKategoriAktif("Semua")}
+              className={`${pillBase} ${kategoriAktif === "Semua" ? pillActive : pillIdle}`}
             >
-              <option value="Semua">Semua Kategori</option>
-              {kategori.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.nama}
-                </option>
-              ))}
-            </select>
+              Semua
+            </button>
+            {kategori.map((k) => (
+              <button
+                key={k.id}
+                type="button"
+                onClick={() => setKategoriAktif(k.id)}
+                className={`${pillBase} ${kategoriAktif === k.id ? pillActive : pillIdle}`}
+              >
+                {k.nama}
+              </button>
+            ))}
           </div>
 
-          <p className="mt-4 text-sm text-slate-500">
-            Menampilkan {hasil.length} dari {dokumen.length} dokumen
-          </p>
-        </div>
+          {hasil.length === 0 ? (
+            <div className="rounded-[8px] border border-[#D5DBE3] bg-white p-8 text-center text-[13px] text-[#5B6675]">
+              Tidak ada dokumen yang sesuai dengan pencarian.
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {kategori.map((kelompok) => {
+                const items = hasil.filter((item) => item.nomor.split(".")[0] === kelompok.id);
+                if (items.length === 0) return null;
 
-        {hasil.length === 0 ? (
-          <div className="rounded-2xl bg-white p-12 text-center text-slate-500">
-            Tidak ada dokumen yang sesuai dengan pencarian.
-          </div>
-        ) : (
-          <div className="space-y-8">
-            {kategori.map((kelompok) => {
-              const items = hasil.filter(
-                (item) =>
-                  item.nomor.split(".")[0] === kelompok.id
-              );
+                return (
+                  <section
+                    key={kelompok.id}
+                    className="overflow-hidden rounded-[8px] border border-[#D5DBE3] bg-white"
+                  >
+                    <div className="flex items-baseline justify-between gap-3 border-b border-[#D5DBE3] bg-[#F5F7FA] px-4 py-3 sm:px-5">
+                      <h3 className="text-[15px] font-semibold text-[#1B2430]">
+                        {kelompok.id}. {kelompok.nama}
+                      </h3>
+                      <span className="shrink-0 text-[12px] text-[#5B6675]">
+                        {items.length} dokumen
+                      </span>
+                    </div>
 
-              if (items.length === 0) return null;
-
-              return (
-                <section
-                  key={kelompok.id}
-                  className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
-                >
-                  <div className="border-b border-slate-200 bg-sky-50 px-6 py-5">
-                    <h2 className="text-lg font-semibold text-sky-900">
-                      {kelompok.id}. {kelompok.nama}
-                    </h2>
-                    <p className="mt-1 text-sm text-slate-500">
-                      {items.length} dokumen
-                    </p>
-                  </div>
-
-                  <div className="divide-y divide-slate-100">
-                    {items.map((item) => (
-                      <div
-                        key={`${item.nomor}-${item.url}`}
-                        className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between"
-                      >
-                        <div className="flex min-w-0 items-start gap-4">
-                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-50 text-sm font-bold text-red-600">
-                            PDF
+                    <ul className="divide-y divide-[#E9EDF2]">
+                      {items.map((item) => (
+                        <li
+                          key={`${item.nomor}-${item.url}`}
+                          className="flex flex-col gap-3 px-4 py-3.5 sm:px-5 md:flex-row md:items-center md:justify-between"
+                        >
+                          <div className="flex min-w-0 items-center gap-3">
+                            <FileText
+                              aria-hidden="true"
+                              className="h-5 w-5 shrink-0 text-[#8A96A6]"
+                            />
+                            <div className="min-w-0">
+                              <p className="text-[12px] font-medium tabular-nums text-[#5B6675]">
+                                {item.nomor}
+                              </p>
+                              <p className="mt-0.5 text-[14px] leading-snug text-[#1B2430]">
+                                {item.judul}
+                              </p>
+                            </div>
                           </div>
 
-                          <div className="min-w-0">
-                            <span className="text-xs font-semibold text-sky-700">
-                              {item.nomor}
-                            </span>
-                            <h3 className="mt-1 text-sm font-medium leading-6 text-slate-800 md:text-base">
-                              {item.judul}
-                            </h3>
+                          <div className="flex shrink-0 gap-2 pl-8 md:pl-0">
+                            <button type="button" onClick={() => setPreview(item)} className={btnOutline}>
+                              <Eye aria-hidden="true" className="h-3.5 w-3.5" />
+                              Lihat
+                            </button>
+                            <a href={item.url} target="_blank" rel="noopener noreferrer" className={btnPrimary}>
+                              <Download aria-hidden="true" className="h-3.5 w-3.5" />
+                              Unduh PDF
+                            </a>
                           </div>
-                        </div>
-
-                        <div className="flex shrink-0 gap-2 pl-16 md:pl-0">
-                          <button
-                            type="button"
-                            onClick={() => setPreview(item)}
-                            className="rounded-lg border border-sky-600 px-4 py-2 text-sm font-medium text-sky-700 transition hover:bg-sky-50"
-                          >
-                            Lihat
-                          </button>
-
-                          <a
-                            href={item.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-sky-800"
-                          >
-                            Unduh PDF
-                          </a>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              );
-            })}
-          </div>
-        )}
-      </section>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                );
+              })}
+            </div>
+          )}
+        </Container>
+      </main>
 
       {preview && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label={`Pratinjau ${preview.judul}`}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={() => setPreview(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A2140]/70 p-4"
         >
-          <div className="flex h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl bg-white">
-            <div className="flex items-center justify-between gap-4 border-b p-4">
-              <h2 className="line-clamp-2 text-sm font-semibold text-slate-800">
-                {preview.judul}
-              </h2>
-
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="flex h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-[8px] bg-white"
+          >
+            <div className="flex items-center justify-between gap-4 border-b border-[#D5DBE3] px-4 py-3">
+              <h2 className="line-clamp-2 text-[14px] font-semibold text-[#1B2430]">{preview.judul}</h2>
               <button
                 type="button"
                 onClick={() => setPreview(null)}
-                className="shrink-0 rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200"
+                aria-label="Tutup pratinjau"
+                className="shrink-0 rounded-[6px] p-1.5 text-[#5B6675] hover:bg-[#F0F3F7] hover:text-[#1B2430]"
               >
-                Tutup
+                <X className="h-5 w-5" />
               </button>
             </div>
 
-            <iframe
-              title={preview.judul}
-              src={preview.url}
-              className="min-h-0 w-full flex-1"
-            />
+            <iframe title={preview.judul} src={preview.url} className="min-h-0 w-full flex-1" />
 
-            <div className="border-t p-3 text-right">
-              <a
-                href={preview.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block rounded-lg bg-sky-700 px-4 py-2 text-sm text-white"
-              >
-                Buka PDF di Tab Baru
+            <div className="flex justify-end border-t border-[#D5DBE3] px-4 py-3">
+              <a href={preview.url} target="_blank" rel="noopener noreferrer" className={btnPrimary}>
+                Buka di tab baru
               </a>
             </div>
           </div>
         </div>
       )}
-    </main>
+    </>
   );
 }

@@ -27,7 +27,7 @@ export interface DatasetPageConfig {
 export const DATASET_PAGES: Record<TipeKey, DatasetPageConfig> = {
   hidrologi: {
     tipe: "hidrologi",
-    kicker: "Dataset SIH3",
+    kicker: "SIH3",
     title: "Informasi Hidrologi",
     description:
       "Hidrologi adalah ilmu yang mempelajari tentang air yang terdapat pada dan/atau mengalir di permukaan tanah, termasuk pergerakan, distribusi, kualitas, serta interaksinya dengan air hujan dan air tanah.",
@@ -36,7 +36,7 @@ export const DATASET_PAGES: Record<TipeKey, DatasetPageConfig> = {
   },
   hidrometeorologi: {
     tipe: "hidrometeorologi",
-    kicker: "Dataset SIH3",
+    kicker: "SIH3",
     title: "Informasi Hidrometeorologi",
     description:
       "Hidrometeorologi adalah cabang ilmu yang mempelajari interaksi antara atmosfer (meteorologi) dan siklus air (hidrologi), khususnya kaitannya dengan cuaca dan iklim, serta dampaknya terhadap bencana alam.",
@@ -45,7 +45,7 @@ export const DATASET_PAGES: Record<TipeKey, DatasetPageConfig> = {
   },
   hidrogeologi: {
     tipe: "hidrogeologi",
-    kicker: "Dataset SIH3",
+    kicker: "SIH3",
     title: "Informasi Hidrogeologi",
     description:
       "Hidrogeologi adalah cabang ilmu geologi yang mempelajari air tanah, termasuk keberadaan, pergerakan, kualitas, dan interaksinya dengan batuan dan tanah di bawah permukaan bumi.",

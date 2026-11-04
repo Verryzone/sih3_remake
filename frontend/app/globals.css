@@ -117,6 +117,92 @@
     }
   }
 
+  /*
+   * Teks hero masuk bertahap saat halaman berganti (kicker → judul → garis →
+   * deskripsi). Durasi & easing sama dengan scroll reveal. Hanya opacity dan
+   * transform, jadi tidak memicu layout. Untuk reduced-motion, animasi tidak
+   * dipasang sama sekali sehingga teks langsung tampil tanpa jeda.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-rise {
+      animation: hero-rise 520ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+      animation-delay: var(--hero-delay, 0ms);
+    }
+    .hero-line {
+      transform-origin: center;
+      animation: hero-line 520ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+      animation-delay: var(--hero-delay, 0ms);
+    }
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 14px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hero-line {
+    from {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    to {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+
+  /*
+   * Mikro-animasi panel admin: pendek (150–200ms) karena dipakai berulang.
+   * Hanya saat muncul; menutup tetap instan agar terasa responsif.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    .anim-fade {
+      animation: anim-fade 150ms ease-out both;
+    }
+    .anim-pop {
+      animation: anim-pop 170ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+    .anim-drop {
+      transform-origin: top right;
+      animation: anim-drop 150ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+    .anim-slide-left {
+      animation: anim-slide-left 200ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+  }
+
+  @keyframes anim-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes anim-pop {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 6px, 0) scale(0.98);
+    }
+  }
+
+  @keyframes anim-drop {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -4px, 0) scale(0.98);
+    }
+  }
+
+  @keyframes anim-slide-left {
+    from {
+      transform: translate3d(-100%, 0, 0);
+    }
+  }
+
   /* Screen-reader only, restored on focus (skip link). */
   .skip-link {
     position: absolute;

@@ -2,18 +2,8 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import {
-  Activity,
-  Plus,
-  Trash2,
-  Loader2,
-  X,
-  Upload,
-  FileSpreadsheet,
-  CheckCircle2,
-  AlertCircle,
-  ChevronDown,
-} from "lucide-react";
+import { Trash2 } from "lucide-react";
+import { AdminModal, AdminPageHeader, IconAction, adm } from "@/components/admin/ui";
 import { API_BASE_URL } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Pos } from "@/lib/types";
@@ -224,7 +214,9 @@ export default function AdminPengukuranPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sinkronisasi data dari API saat filter/halaman berubah
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, filterPos, filterStatus]);
 
   const openAddModal = () => {
@@ -376,147 +368,107 @@ export default function AdminPengukuranPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "Normal":   return "bg-emerald-50 text-emerald-700 border-emerald-200";
-      case "Waspada":  return "bg-amber-50 text-amber-700 border-amber-200";
-      case "Siaga":    return "bg-orange-50 text-orange-700 border-orange-200";
-      case "Awas":     return "bg-red-50 text-red-700 border-red-200";
-      default:         return "bg-gray-50 text-gray-700 border-gray-200";
+      case "Normal":   return "border-status-good-border bg-status-good-bg text-status-good-fg";
+      case "Waspada":  return "border-status-watch-border bg-status-watch-bg text-status-watch-fg";
+      case "Siaga":    return "border-status-warning-border bg-status-warning-bg text-status-warning-fg";
+      case "Awas":     return "border-status-danger-border bg-status-danger-bg text-status-danger-fg";
+      default:         return "border-status-neutral-border bg-status-neutral-bg text-status-neutral-fg";
     }
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-            <Activity className="w-6 h-6 text-[#14396A]" />
-            <span>Pengukuran &amp; Deret Waktu Sensor</span>
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Input rekaman tinggi muka air (TMA), curah hujan harian, dan pantau status ambang siaga.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={openCsvModal}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-sm shadow-sm transition-colors cursor-pointer"
-          >
-            <FileSpreadsheet className="w-4 h-4" />
-            <span>Import CSV</span>
-          </button>
-          {/* Tombol Manual */}
-          <button
-            onClick={openAddModal}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0E2A4E] hover:bg-[#14396A] text-white font-semibold text-sm shadow-sm transition-colors cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Input Manual</span>
-          </button>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        kicker="Pengukuran"
+        title="Data pengukuran"
+        description="Rekaman tinggi muka air dan curah hujan beserta status ambang siaga."
+        actions={
+          <>
+            <button type="button" onClick={openCsvModal} className={adm.btnOutline}>
+              Impor CSV
+            </button>
+            <button type="button" onClick={openAddModal} className={adm.btnPrimary}>
+              Input manual
+            </button>
+          </>
+        }
+      />
 
-      <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
-        <div className="w-full sm:w-80">
-          <select
-            value={filterPos}
-            onChange={(e) => {
-              setFilterPos(e.target.value);
-              setPage(1);
-            }}
-            className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-          >
-            <option value="">Semua Pos Pemantauan</option>
-            {posList.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.nama} ({p.kode_pos})
-              </option>
-            ))}
-          </select>
+      <section className={`${adm.card} overflow-hidden`}>
+        <div className="flex flex-col gap-3 border-b border-[#D5DBE3] px-4 py-3 sm:flex-row sm:items-center">
+          <label className="w-full sm:w-80">
+            <span className="sr-only">Filter pos</span>
+            <select
+              value={filterPos}
+              onChange={(e) => {
+                setFilterPos(e.target.value);
+                setPage(1);
+              }}
+              className={adm.input}
+            >
+              <option value="">Semua pos</option>
+              {posList.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.nama} ({p.kode_pos})
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="w-full sm:w-48">
+            <span className="sr-only">Filter status</span>
+            <select
+              value={filterStatus}
+              onChange={(e) => {
+                setFilterStatus(e.target.value);
+                setPage(1);
+              }}
+              className={adm.input}
+            >
+              <option value="">Semua status</option>
+              <option value="Normal">Normal</option>
+              <option value="Waspada">Waspada</option>
+              <option value="Siaga">Siaga</option>
+              <option value="Awas">Awas</option>
+            </select>
+          </label>
         </div>
 
-        <div className="w-full sm:w-auto">
-          <select
-            value={filterStatus}
-            onChange={(e) => {
-              setFilterStatus(e.target.value);
-              setPage(1);
-            }}
-            className="w-full sm:w-auto px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-          >
-            <option value="">Semua Status Siaga</option>
-            <option value="Normal">Normal</option>
-            <option value="Waspada">Waspada</option>
-            <option value="Siaga">Siaga</option>
-            <option value="Awas">Awas</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Table Data */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="p-12 flex flex-col items-center justify-center text-gray-400">
-            <Loader2 className="w-8 h-8 animate-spin mb-2 text-[#0E2A4E]" />
-            <span className="text-sm">Memuat data pengukuran...</span>
-          </div>
+          <div className={adm.empty}>Memuat data pengukuran…</div>
         ) : pengukuranList.length === 0 ? (
-          <div className="p-12 text-center text-gray-500 text-sm">
-            Tidak ada rekaman pengukuran yang ditemukan.
-          </div>
+          <div className={adm.empty}>Tidak ada rekaman pengukuran.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-700">
-              <thead className="bg-[#0A2140] text-white text-xs uppercase font-semibold">
+            <table className={adm.table}>
+              <thead className={adm.thead}>
                 <tr>
-                  <th className="py-3 px-4">Pos Pemantauan</th>
-                  <th className="py-3 px-4">Waktu Rekam</th>
-                  <th className="py-3 px-4">Nilai Terukur</th>
-                  <th className="py-3 px-4">Satuan</th>
-                  <th className="py-3 px-4">Ambang Batas Siaga</th>
-                  <th className="py-3 px-4 text-center">Aksi</th>
+                  <th className={adm.th}>Pos</th>
+                  <th className={adm.th}>Waktu rekam</th>
+                  <th className={`${adm.th} text-right`}>Nilai</th>
+                  <th className={adm.th}>Status</th>
+                  <th className={`${adm.th} text-right`}>Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody>
                 {pengukuranList.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50/80 transition-colors">
-                    <td className="py-3 px-4">
-                      <div className="font-semibold text-gray-900">
-                        {item.pos?.nama || `Pos #${item.pos_id}`}
-                      </div>
-                      <div className="text-xs text-gray-400 font-mono">
-                        {item.pos?.kode_pos}
-                      </div>
+                  <tr key={item.id} className={adm.tr}>
+                    <td className={adm.td}>
+                      <p className="text-[14px] font-semibold text-[#1B2430]">{item.pos?.nama || `Pos #${item.pos_id}`}</p>
+                      <p className="text-[12px] text-[#5B6675]">{item.pos?.kode_pos}</p>
                     </td>
-                    <td className="py-3 px-4 text-xs font-mono text-gray-600">
-                      {new Date(item.recorded_at).toLocaleString("id-ID", {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })}
+                    <td className={`${adm.td} whitespace-nowrap tabular-nums`}>
+                      {new Date(item.recorded_at).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" })}
                     </td>
-                    <td className="py-3 px-4 font-bold text-gray-900 font-mono">
-                      {item.nilai}
+                    <td className={`${adm.td} whitespace-nowrap text-right tabular-nums`}>
+                      <span className="font-semibold text-[#1B2430]">{item.nilai}</span> {item.satuan}
                     </td>
-                    <td className="py-3 px-4 text-xs text-gray-500">
-                      {item.satuan}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getStatusBadge(
-                          item.status_siaga
-                        )}`}
-                      >
+                    <td className={adm.td}>
+                      <span className={`inline-flex h-6 items-center rounded-full border px-2.5 text-[12px] font-medium ${getStatusBadge(item.status_siaga)}`}>
                         {item.status_siaga}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-center">
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                        title="Hapus Rekaman"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                    <td className={`${adm.td} text-right`}>
+                      <IconAction label="Hapus" icon={Trash2} danger onClick={() => handleDelete(item.id)} />
                     </td>
                   </tr>
                 ))}
@@ -525,324 +477,229 @@ export default function AdminPengukuranPage() {
           </div>
         )}
 
-        {/* Pagination Bar */}
         {totalPages > 1 && (
-          <div className="p-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center justify-between gap-3 border-t border-[#D5DBE3] px-4 py-3 text-[13px] text-[#5B6675]">
             <span>Halaman {page} dari {totalPages}</span>
             <div className="flex gap-2">
-              <button
-                disabled={page <= 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="px-3 py-1.5 rounded border border-gray-300 disabled:opacity-40 hover:bg-gray-50"
-              >
+              <button type="button" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))} className={`${adm.btnOutline} h-8 px-3`}>
                 Sebelumnya
               </button>
-              <button
-                disabled={page >= totalPages}
-                onClick={() => setPage((p) => p + 1)}
-                className="px-3 py-1.5 rounded border border-gray-300 disabled:opacity-40 hover:bg-gray-50"
-              >
-                Selanjutnya
+              <button type="button" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className={`${adm.btnOutline} h-8 px-3`}>
+                Berikutnya
               </button>
             </div>
           </div>
         )}
-      </div>
+      </section>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full">
-            <div className="flex items-center justify-between p-5 border-b border-gray-100">
-              <h3 className="text-lg font-bold text-gray-900">
-                Input Data Pengukuran Baru
-              </h3>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
+        <AdminModal
+          title="Input pengukuran"
+          onClose={() => setIsModalOpen(false)}
+          footer={
+            <>
+              <button type="button" onClick={() => setIsModalOpen(false)} className={adm.btnOutline}>
+                Batal
               </button>
+              <button type="submit" form="form-pengukuran" disabled={saving} className={adm.btnPrimary}>
+                {saving ? "Menyimpan…" : "Simpan"}
+              </button>
+            </>
+          }
+        >
+          <form id="form-pengukuran" onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="pg-pos" className={adm.label}>Pos pemantauan</label>
+              <select
+                id="pg-pos"
+                required
+                value={formData.pos_id}
+                onChange={(e) => {
+                  const selPos = posList.find((p) => String(p.id) === e.target.value);
+                  setFormData({
+                    ...formData,
+                    pos_id: e.target.value,
+                    satuan: selPos?.tipe === "hidrometeorologi" ? "mm" : "m",
+                  });
+                }}
+                className={adm.input}
+              >
+                {posList.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.nama} ({p.jenis} · {p.kode_pos})
+                  </option>
+                ))}
+              </select>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Pilih Pos Pemantauan *
-                </label>
-                <select
-                  required
-                  value={formData.pos_id}
-                  onChange={(e) => {
-                    const selPos = posList.find((p) => String(p.id) === e.target.value);
-                    setFormData({
-                      ...formData,
-                      pos_id: e.target.value,
-                      satuan: selPos?.tipe === "hidrometeorologi" ? "mm" : "m",
-                    });
-                  }}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-                >
-                  {posList.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.nama} ({p.jenis} - {p.kode_pos})
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div>
+              <label htmlFor="pg-waktu" className={adm.label}>Waktu rekaman</label>
+              <input
+                id="pg-waktu"
+                type="datetime-local"
+                required
+                value={formData.recorded_at}
+                onChange={(e) => setFormData({ ...formData, recorded_at: e.target.value })}
+                className={adm.input}
+              />
+            </div>
 
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Waktu Rekaman (Tanggal &amp; Jam) *
-                </label>
+                <label htmlFor="pg-nilai" className={adm.label}>Nilai</label>
                 <input
-                  type="datetime-local"
+                  id="pg-nilai"
+                  type="number"
+                  step="0.01"
                   required
-                  value={formData.recorded_at}
-                  onChange={(e) => setFormData({ ...formData, recorded_at: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
+                  value={formData.nilai}
+                  onChange={(e) => setFormData({ ...formData, nilai: e.target.value })}
+                  placeholder="1.85"
+                  className={adm.input}
                 />
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Nilai Angka *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={formData.nilai}
-                    onChange={(e) => setFormData({ ...formData, nilai: e.target.value })}
-                    placeholder="Contoh: 1.85"
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Satuan *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.satuan}
-                    onChange={(e) => setFormData({ ...formData, satuan: e.target.value })}
-                    placeholder="m / mm"
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-                  />
-                </div>
-              </div>
-
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Status Ambang Batas Siaga
-                </label>
-                <select
-                  value={formData.status_siaga}
-                  onChange={(e) => setFormData({ ...formData, status_siaga: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-                >
-                  <option value="Normal">Normal (Aman)</option>
-                  <option value="Waspada">Waspada (Kuning)</option>
-                  <option value="Siaga">Siaga (Oranye)</option>
-                  <option value="Awas">Awas (Merah)</option>
-                </select>
+                <label htmlFor="pg-satuan" className={adm.label}>Satuan</label>
+                <input
+                  id="pg-satuan"
+                  type="text"
+                  required
+                  value={formData.satuan}
+                  onChange={(e) => setFormData({ ...formData, satuan: e.target.value })}
+                  placeholder="m / mm"
+                  className={adm.input}
+                />
               </div>
+            </div>
 
-              <div className="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="px-5 py-2 rounded-lg bg-[#0E2A4E] hover:bg-[#14396A] text-white text-sm font-semibold shadow-sm transition-colors disabled:opacity-60 cursor-pointer"
-                >
-                  {saving ? "Menyimpan..." : "Simpan Pengukuran"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+            <div>
+              <label htmlFor="pg-status" className={adm.label}>Status ambang siaga</label>
+              <select
+                id="pg-status"
+                value={formData.status_siaga}
+                onChange={(e) => setFormData({ ...formData, status_siaga: e.target.value })}
+                className={adm.input}
+              >
+                <option value="Normal">Normal</option>
+                <option value="Waspada">Waspada</option>
+                <option value="Siaga">Siaga</option>
+                <option value="Awas">Awas</option>
+              </select>
+            </div>
+          </form>
+        </AdminModal>
       )}
 
       {isCsvModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-gray-100 sticky top-0 bg-white z-10">
-              <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
-                <h3 className="text-lg font-bold text-gray-900">
-                  Import Data dari CSV
-                </h3>
-              </div>
-              <button
-                onClick={() => setIsCsvModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
+        <AdminModal
+          title="Impor data dari CSV"
+          onClose={() => setIsCsvModalOpen(false)}
+          wide
+          footer={
+            <>
+              <button type="button" onClick={() => setIsCsvModalOpen(false)} className={adm.btnOutline}>
+                {csvDone ? "Tutup" : "Batal"}
               </button>
-            </div>
-
-            <div className="p-5 space-y-5">
-          
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                  Petakan ke Pos Pemantauan *
-                </label>
-                <div className="relative">
-                  <select
-                    value={csvPosId}
-                    onChange={(e) => setCsvPosId(e.target.value)}
-                    className="w-full appearance-none px-3 py-2.5 pr-8 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-                  >
-                    <option value="">— Pilih Pos —</option>
-                    {posList.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.nama} ({p.jenis} — {p.kode_pos})
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Upload File */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                  Pilih File CSV *
-                </label>
-                <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-gray-300 hover:border-emerald-400 rounded-xl p-6 text-center cursor-pointer transition-colors group"
-                >
-                  <Upload className="w-8 h-8 text-gray-400 group-hover:text-emerald-500 mx-auto mb-2 transition-colors" />
-                  {csvFileName ? (
-                    <p className="text-sm font-semibold text-gray-700">{csvFileName}</p>
-                  ) : (
-                    <p className="text-sm text-gray-500">
-                      Klik untuk pilih file <strong>.csv</strong>
-                    </p>
-                  )}
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".csv,text/csv"
-                    onChange={handleCsvFile}
-                    className="hidden"
-                  />
-                </div>
-              </div>
-
-              {/* Preview hasil parsing */}
-              {csvParsed.length > 0 && (
-                <div className="rounded-lg border border-gray-200 overflow-hidden">
-                  <div className="bg-gray-50 px-4 py-2.5 border-b border-gray-200 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-700">
-                      Hasil Parsing — {csvParsed.length} blok bulan ditemukan
-                    </span>
-                    <span className="text-xs text-emerald-700 font-bold">
-                      Total {totalCsvRows.toLocaleString("id-ID")} rekaman siap diimpor
-                    </span>
-                  </div>
-                  <div className="divide-y divide-gray-100 max-h-48 overflow-y-auto">
-                    {csvParsed.map((block, idx) => (
-                      <div key={idx} className="px-4 py-2.5 flex items-center justify-between text-sm">
-                        <div>
-                          <span className="font-semibold text-gray-800 capitalize">
-                            {block.bulan} {block.tahun}
-                          </span>
-                          <span className="ml-2 text-xs text-gray-500">
-                            Stasiun: {block.stasiun}
-                          </span>
-                        </div>
-                        <span className="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded-full border border-emerald-200">
-                          {block.rows.length} rekaman
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Progress bar */}
-              {csvImporting && (
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs text-gray-600">
-                    <span>Mengimpor rekaman...</span>
-                    <span>{csvProgress}%</span>
-                  </div>
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-emerald-500 rounded-full transition-all duration-300"
-                      style={{ width: `${csvProgress}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Hasil import */}
-              {csvDone && !csvImporting && (
-                <div className={`rounded-lg p-4 border text-sm ${csvErrors.length === 0 ? "bg-emerald-50 border-emerald-200 text-emerald-800" : "bg-amber-50 border-amber-200 text-amber-800"}`}>
-                  {csvErrors.length === 0 ? (
-                    <div className="flex items-center gap-2 font-semibold">
-                      <CheckCircle2 className="w-5 h-5" />
-                      Import berhasil! Semua rekaman telah tersimpan di database.
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="flex items-center gap-2 font-semibold mb-2">
-                        <AlertCircle className="w-5 h-5" />
-                        Import selesai dengan {csvErrors.length} error
-                      </div>
-                      <ul className="text-xs space-y-1 max-h-24 overflow-y-auto">
-                        {csvErrors.map((e, i) => (
-                          <li key={i} className="font-mono truncate">{e}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Tombol aksi */}
-              <div className="pt-2 border-t border-gray-100 flex items-center justify-end gap-3">
+              {!csvDone && (
                 <button
                   type="button"
-                  onClick={() => setIsCsvModalOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50"
+                  disabled={!csvPosId || csvParsed.length === 0 || csvImporting}
+                  onClick={handleCsvImport}
+                  className={adm.btnPrimary}
                 >
-                  {csvDone ? "Tutup" : "Batal"}
+                  {csvImporting
+                    ? `Mengimpor ${csvProgress}%…`
+                    : `Impor${totalCsvRows > 0 ? ` ${totalCsvRows.toLocaleString("id-ID")} rekaman` : ""}`}
                 </button>
-                {!csvDone && (
-                  <button
-                    type="button"
-                    disabled={!csvPosId || csvParsed.length === 0 || csvImporting}
-                    onClick={handleCsvImport}
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-semibold shadow-sm transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-                  >
-                    {csvImporting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Mengimpor {csvProgress}%...
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-4 h-4" />
-                        Import {totalCsvRows > 0 ? `${totalCsvRows.toLocaleString("id-ID")} Rekaman` : ""}
-                      </>
-                    )}
-                  </button>
+              )}
+            </>
+          }
+        >
+          <div className="space-y-5">
+            <div>
+              <label htmlFor="csv-pos" className={adm.label}>Petakan ke pos</label>
+              <select id="csv-pos" value={csvPosId} onChange={(e) => setCsvPosId(e.target.value)} className={adm.input}>
+                <option value="">Pilih pos…</option>
+                {posList.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.nama} ({p.jenis} · {p.kode_pos})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="csv-file" className={adm.label}>Berkas CSV</label>
+              <input
+                id="csv-file"
+                ref={fileInputRef}
+                type="file"
+                accept=".csv,text/csv"
+                onChange={handleCsvFile}
+                className="block w-full text-[13px] text-[#3D4756] file:mr-3 file:h-8 file:rounded-[6px] file:border file:border-[#AEB8C5] file:bg-white file:px-3 file:text-[13px] file:font-medium file:text-[#1B2430] hover:file:bg-[#F0F3F7]"
+              />
+              <span className={adm.hint}>
+                {csvFileName ? `Dipilih: ${csvFileName}` : "Format laporan ARR (BMKG/DPUP), satu blok per bulan."}
+              </span>
+            </div>
+
+            {csvParsed.length > 0 && (
+              <div className="overflow-hidden rounded-[6px] border border-[#D5DBE3]">
+                <div className="flex items-center justify-between gap-3 border-b border-[#D5DBE3] bg-[#F5F7FA] px-4 py-2.5 text-[12px]">
+                  <span className="font-semibold text-[#1B2430]">{csvParsed.length} blok bulan ditemukan</span>
+                  <span className="text-[#5B6675]">{totalCsvRows.toLocaleString("id-ID")} rekaman siap diimpor</span>
+                </div>
+                <ul className="max-h-48 divide-y divide-[#E9EDF2] overflow-y-auto">
+                  {csvParsed.map((block, idx) => (
+                    <li key={idx} className="flex items-center justify-between px-4 py-2.5 text-[13px]">
+                      <span>
+                        <span className="font-semibold capitalize text-[#1B2430]">{block.bulan} {block.tahun}</span>
+                        <span className="ml-2 text-[12px] text-[#5B6675]">Stasiun {block.stasiun}</span>
+                      </span>
+                      <span className="tabular-nums text-[#3D4756]">{block.rows.length} rekaman</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {csvImporting && (
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-[12px] text-[#5B6675]">
+                  <span>Mengimpor rekaman…</span>
+                  <span className="tabular-nums">{csvProgress}%</span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-[#EEF1F5]">
+                  <div className="h-full rounded-full bg-[#14396A] transition-all duration-300" style={{ width: `${csvProgress}%` }} />
+                </div>
+              </div>
+            )}
+
+            {csvDone && !csvImporting && (
+              <div
+                role="status"
+                className={`rounded-[6px] border px-4 py-3 text-[13px] ${
+                  csvErrors.length === 0
+                    ? "border-status-good-border bg-status-good-bg text-status-good-fg"
+                    : "border-status-watch-border bg-status-watch-bg text-status-watch-fg"
+                }`}
+              >
+                {csvErrors.length === 0 ? (
+                  <p className="font-semibold">Impor berhasil. Semua rekaman tersimpan.</p>
+                ) : (
+                  <>
+                    <p className="font-semibold">Impor selesai dengan {csvErrors.length} galat.</p>
+                    <ul className="mt-2 max-h-24 space-y-1 overflow-y-auto text-[12px]">
+                      {csvErrors.map((e, i) => (
+                        <li key={i} className="truncate font-mono">{e}</li>
+                      ))}
+                    </ul>
+                  </>
                 )}
               </div>
-            </div>
+            )}
           </div>
-        </div>
+        </AdminModal>
       )}
     </div>
   );

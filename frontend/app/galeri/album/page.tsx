@@ -1,6 +1,31 @@
 "use client";
 
+import type React from "react";
+
 import { useState } from "react";
+import { Container } from "@/components/layout/Container";
+import { DatasetHero } from "@/components/dataset/DatasetHero";
+
+/**
+ * Foto dummy dari internet saat file lokal belum tersedia.
+ * Seed diambil dari path sehingga foto yang sama selalu muncul untuk path yang sama.
+ * Begitu file asli ditaruh di public/images/album/..., foto asli yang tampil.
+ */
+function gantiKeDummy(img: HTMLImageElement) {
+  // Sudah dummy (atau dummy pun gagal): berhenti agar tidak berulang.
+  if (img.src.includes("picsum.photos")) return;
+  const seed = (img.getAttribute("src") || "sih3").replace(/[^a-z0-9]/gi, "-");
+  img.src = `https://picsum.photos/seed/${seed}/1200/800`;
+}
+
+function pakaiFotoDummy(e: React.SyntheticEvent<HTMLImageElement>) {
+  gantiKeDummy(e.currentTarget);
+}
+
+/** Menangkap gambar yang sudah gagal dimuat sebelum React aktif (hydration). */
+function cekFotoRusak(img: HTMLImageElement | null) {
+  if (img && img.complete && img.naturalWidth === 0) gantiKeDummy(img);
+}
 
 // Tipe data item kegiatan
 type ItemAlbum = {
@@ -1258,22 +1283,26 @@ export default function AlbumKegiatanPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white pb-20">
-      <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
-        {/* HEADER ALBUM */}
-        <div className="flex items-center space-x-1.5 text-xs font-semibold uppercase text-amber-600">
-          <span>📷</span>
-          <span>ALBUM</span>
-        </div>
-        <h2 className="mt-1 text-3xl font-extrabold text-slate-900">
+    <>
+    <DatasetHero
+      kicker="Galeri"
+      title="Album Kegiatan"
+      description="Dokumentasi kegiatan lapangan dan acara Balai Besar Wilayah Sungai Serayu Opak dalam pengelolaan data hidrologi, hidrometeorologi, dan hidrogeologi."
+    />
+    <main className="min-h-screen bg-page pb-20">
+      <Container as="section" className="py-8 sm:py-10">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B5CAD]">
+          Album
+        </p>
+        <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.01em] text-[#1B2430] sm:text-[26px]">
           Galeri kegiatan
         </h2>
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-[13px] text-[#5B6675]">
           Klik album untuk melihat seluruh foto dokumentasi kegiatan.
         </p>
 
         {/* TAB FILTER */}
-        <div className="mt-6 flex border-b border-slate-200 text-xs font-bold uppercase tracking-wider">
+        <div className="mt-6 flex border-b border-[#D5DBE3] text-xs font-semibold uppercase tracking-wider">
           <button
             onClick={() => {
               setActiveTab("SEMUA");
@@ -1281,7 +1310,7 @@ export default function AlbumKegiatanPage() {
             }}
             className={`mr-8 pb-3 border-b-2 transition ${
               activeTab === "SEMUA"
-                ? "border-sky-600 text-sky-600 font-bold"
+                ? "border-[#0B5CAD] text-[#0B5CAD] font-semibold"
                 : "border-transparent text-slate-400 hover:text-slate-600"
             }`}
           >
@@ -1294,7 +1323,7 @@ export default function AlbumKegiatanPage() {
             }}
             className={`mr-8 pb-3 border-b-2 transition ${
               activeTab === "ACARA"
-                ? "border-sky-600 text-sky-600 font-bold"
+                ? "border-[#0B5CAD] text-[#0B5CAD] font-semibold"
                 : "border-transparent text-slate-400 hover:text-slate-600"
             }`}
           >
@@ -1307,7 +1336,7 @@ export default function AlbumKegiatanPage() {
             }}
             className={`pb-3 border-b-2 transition ${
               activeTab === "LAPANGAN"
-                ? "border-sky-600 text-sky-600 font-bold"
+                ? "border-[#0B5CAD] text-[#0B5CAD] font-semibold"
                 : "border-transparent text-slate-400 hover:text-slate-600"
             }`}
           >
@@ -1323,18 +1352,20 @@ export default function AlbumKegiatanPage() {
               className="lg:col-span-7 cursor-pointer group"
               onClick={() => handleOpenModal(heroItem)}
             >
-              <div className="relative overflow-hidden rounded-2xl bg-slate-900 shadow-sm">
+              <div className="relative overflow-hidden rounded-xl bg-slate-900 shadow-sm">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                  onError={pakaiFotoDummy}
+                  ref={cekFotoRusak}
                   src={heroItem.gambarCover}
                   alt={heroItem.judul}
                   className="h-[400px] w-full object-cover transition duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 text-white">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#F2A900]">
                     {heroItem.kategori}
                   </span>
-                  <h3 className="mt-1 text-2xl font-extrabold leading-snug">
+                  <h3 className="mt-1 text-2xl font-semibold leading-snug">
                     {heroItem.judul}
                   </h3>
                   <p className="mt-1 text-xs text-slate-300">
@@ -1351,21 +1382,23 @@ export default function AlbumKegiatanPage() {
               className="lg:col-span-5 cursor-pointer group"
               onClick={() => handleOpenModal(sideItem)}
             >
-              <div className="overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100">
+              <div className="overflow-hidden rounded-[8px] bg-white border border-[#D5DBE3]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                  onError={pakaiFotoDummy}
+                  ref={cekFotoRusak}
                   src={sideItem.gambarCover}
                   alt={sideItem.judul}
                   className="h-[230px] w-full object-cover transition duration-300 group-hover:scale-105"
                 />
                 <div className="p-5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-sky-600">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#0B5CAD]">
                     {sideItem.kategori}
                   </span>
                   <p className="mt-0.5 text-[11px] font-medium text-slate-400 uppercase">
                     {sideItem.tanggalFormat}
                   </p>
-                  <h4 className="mt-1 text-base font-bold text-slate-900 group-hover:text-sky-600 leading-snug">
+                  <h4 className="mt-1 text-base font-bold text-[#1B2430] group-hover:text-[#0B5CAD] leading-snug">
                     {sideItem.judul}
                   </h4>
                   <p className="mt-2 text-xs leading-relaxed text-slate-500 line-clamp-2">
@@ -1380,28 +1413,32 @@ export default function AlbumKegiatanPage() {
         {/* 3 GRID SEJAJAR DI BAWAH */}
         {threeGridItems.length > 0 && (
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {threeGridItems.map((item) => (
+            {threeGridItems.map((item, index) => (
               <div
                 key={item.id}
-                className="group cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100 transition hover:shadow-md"
+                data-reveal
+                style={{ "--reveal-delay": `${Math.min(index, 5) * 50}ms` } as React.CSSProperties}
+                className="group cursor-pointer overflow-hidden rounded-[8px] bg-white border border-[#D5DBE3] transition-all hover:border-[#AEB8C5] hover:shadow-[0_2px_10px_rgba(14,42,78,0.08)]"
                 onClick={() => handleOpenModal(item)}
               >
                 <div className="overflow-hidden bg-slate-100">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
+                  onError={pakaiFotoDummy}
+                  ref={cekFotoRusak}
                     src={item.gambarCover}
                     alt={item.judul}
                     className="h-52 w-full object-cover transition duration-300 group-hover:scale-105"
                   />
                 </div>
                 <div className="p-5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-sky-600">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#0B5CAD]">
                     {item.kategori}
                   </span>
                   <p className="mt-0.5 text-[11px] font-medium text-slate-400 uppercase">
                     {item.tanggalFormat}
                   </p>
-                  <h4 className="mt-1 text-base font-bold text-slate-900 line-clamp-2 group-hover:text-sky-600 leading-snug">
+                  <h4 className="mt-1 text-base font-bold text-[#1B2430] line-clamp-2 group-hover:text-[#0B5CAD] leading-snug">
                     {item.judul}
                   </h4>
                 </div>
@@ -1413,7 +1450,7 @@ export default function AlbumKegiatanPage() {
         {/* SECTION DOKUMENTASI LAINNYA */}
         {activeDokumentasiLainnya.length > 0 && (
           <div className="mt-20">
-            <h2 className="text-center text-3xl font-extrabold tracking-tight text-slate-900 uppercase mb-12">
+            <h2 className="text-center text-3xl font-semibold tracking-tight text-[#1B2430] uppercase mb-12">
               DOKUMENTASI LAINNYA
             </h2>
 
@@ -1431,9 +1468,11 @@ export default function AlbumKegiatanPage() {
                       }`}
                       onClick={() => handleOpenModal(item)}
                     >
-                      <div className="overflow-hidden rounded-2xl bg-slate-100 shadow-sm border border-slate-100">
+                      <div className="overflow-hidden rounded-xl bg-slate-100 shadow-sm border border-slate-100">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
+                  onError={pakaiFotoDummy}
+                  ref={cekFotoRusak}
                           src={item.gambarCover}
                           alt={item.judul}
                           className="h-[320px] w-full object-cover transition duration-300 group-hover:scale-105"
@@ -1447,13 +1486,13 @@ export default function AlbumKegiatanPage() {
                       }`}
                     >
                       <div className="flex items-center space-x-3 text-xs font-bold uppercase tracking-wider text-slate-400">
-                        <span className="text-sky-600">{item.kategori}</span>
+                        <span className="text-[#0B5CAD]">{item.kategori}</span>
                         <span>•</span>
                         <span>{item.tanggalFormat}</span>
                       </div>
                       <h3
                         onClick={() => handleOpenModal(item)}
-                        className="mt-3 text-2xl font-extrabold leading-snug text-slate-900 hover:text-sky-600 cursor-pointer transition"
+                        className="mt-3 text-2xl font-semibold leading-snug text-[#1B2430] hover:text-[#0B5CAD] cursor-pointer transition"
                       >
                         {item.judul}
                       </h3>
@@ -1477,7 +1516,7 @@ export default function AlbumKegiatanPage() {
               className={`flex h-11 w-11 items-center justify-center rounded-full border text-base font-semibold transition ${
                 currentPage === 1
                   ? "border-slate-200 text-slate-300 cursor-not-allowed bg-white"
-                  : "border-slate-200 text-slate-700 hover:border-sky-600 hover:text-sky-600 bg-white shadow-xs"
+                  : "border-slate-200 text-slate-700 hover:border-[#0B5CAD] hover:text-[#0B5CAD] bg-white shadow-xs"
               }`}
               title="Halaman Sebelumnya"
             >
@@ -1490,8 +1529,8 @@ export default function AlbumKegiatanPage() {
                 onClick={() => setCurrentPage(page)}
                 className={`flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold transition ${
                   currentPage === page
-                    ? "bg-[#0284C7] text-white shadow-md border border-[#0284C7]"
-                    : "bg-white border border-slate-200 text-slate-700 hover:border-sky-600 hover:text-sky-600 shadow-xs"
+                    ? "bg-[#14396A] text-white shadow-md border border-[#14396A]"
+                    : "bg-white border border-slate-200 text-slate-700 hover:border-[#0B5CAD] hover:text-[#0B5CAD] shadow-xs"
                 }`}
               >
                 {page}
@@ -1504,7 +1543,7 @@ export default function AlbumKegiatanPage() {
               className={`flex h-11 w-11 items-center justify-center rounded-full border text-base font-semibold transition ${
                 currentPage === maxPage
                   ? "border-slate-200 text-slate-300 cursor-not-allowed bg-white"
-                  : "border-slate-200 text-slate-700 hover:border-sky-600 hover:text-sky-600 bg-white shadow-xs"
+                  : "border-slate-200 text-slate-700 hover:border-[#0B5CAD] hover:text-[#0B5CAD] bg-white shadow-xs"
               }`}
               title="Halaman Selanjutnya"
             >
@@ -1512,7 +1551,7 @@ export default function AlbumKegiatanPage() {
             </button>
           </div>
         )}
-      </section>
+      </Container>
 
       {/* POP-UP MODAL LIGHTBOX SLIDER FOTO - DISPLAY ASLI 100% UTUH TANPA TERPOTONG */}
       {selectedItem && (
@@ -1530,12 +1569,14 @@ export default function AlbumKegiatanPage() {
 
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-y-auto rounded-3xl bg-white p-6 sm:p-8 shadow-2xl"
+            className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-y-auto rounded-xl bg-white p-6 sm:p-8 shadow-2xl"
           >
             {/* CONTAINER FLEKSIBEL MENYESUAIKAN GAMBAR DENGAN BATAS TINGGI LAYAR MODAL */}
-            <div className="relative w-full overflow-hidden rounded-2xl bg-[#0b1b2d] flex items-center justify-center">
+            <div className="relative w-full overflow-hidden rounded-xl bg-[#0E2A4E] flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
+                  onError={pakaiFotoDummy}
+                  ref={cekFotoRusak}
                 src={selectedItem.galeriGambar[activePhotoIndex]}
                 alt={`${selectedItem.judul} foto ${activePhotoIndex + 1}`}
                 className="w-full max-h-[60vh] object-contain transition duration-300"
@@ -1571,7 +1612,7 @@ export default function AlbumKegiatanPage() {
             </div>
 
             <div className="mt-6 flex flex-col text-center">
-              <h3 className="text-xl font-extrabold text-slate-900 sm:text-2xl">
+              <h3 className="text-xl font-semibold text-[#1B2430] sm:text-2xl">
                 {selectedItem.judul}
               </h3>
               <p className="mt-1 text-xs italic text-slate-500">
@@ -1605,5 +1646,6 @@ export default function AlbumKegiatanPage() {
         </div>
       )}
     </main>
+    </>
   );
 }

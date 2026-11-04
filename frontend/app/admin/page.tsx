@@ -3,19 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
-import {
-  Radio,
-  FileText,
-  Building2,
-  Activity,
-  PlusCircle,
-  ExternalLink,
-  CheckCircle2,
-  TrendingUp,
-  Droplets,
-  CloudRain,
-  Layers,
-} from "lucide-react";
 import { API_BASE_URL } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 
@@ -92,233 +79,116 @@ export default function AdminDashboardPage() {
     fetchStats();
   }, [token]);
 
+  const fmt = (n: number) => (loading ? "…" : n.toLocaleString("id-ID"));
+
+  const tiles = [
+    { label: "Pos pemantauan", value: stats.totalPos, href: "/admin/pos", link: "Kelola pos" },
+    { label: "Walidata", value: stats.walidataCount, href: "/admin/walidata", link: "Kelola walidata" },
+    { label: "Dokumen publikasi", value: stats.dokumenCount, href: "/admin/dokumen", link: "Kelola dokumen" },
+    { label: "Rekaman pengukuran", value: stats.pengukuranCount, href: "/admin/pengukuran", link: "Input & pantau" },
+  ];
+
+  const bidang = [
+    { nama: "Hidrologi", ket: "Pos duga air & kualitas air", value: stats.hidrologiPos, href: "/hidrologi" },
+    { nama: "Hidrometeorologi", ket: "Pos curah hujan & klimatologi", value: stats.hidrometeorologiPos, href: "/hidrometeorologi" },
+    { nama: "Hidrogeologi", ket: "Sumur pantau air tanah", value: stats.hidrogeologiPos, href: "/hidrogeologi" },
+  ];
+
+  const card = "rounded-[8px] border border-[#D5DBE3] bg-white";
+
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Welcome Banner */}
-      <div className="rounded-xl bg-gradient-to-r from-[#000080] to-[#4682B4] p-6 text-white shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Selamat Datang, {user?.name || "Administrator"}!
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B5CAD]">Ringkasan</p>
+          <h1 className="mt-1 text-[22px] font-semibold tracking-[-0.01em] text-[#1B2430] sm:text-[26px]">
+            Selamat datang, {user?.name || "Administrator"}
           </h1>
-          <p className="mt-1 text-sm text-gray-200">
-            Pusat Kendali Portal Satu Data Hidrologi, Hidrometeorologi, & Hidrogeologi BBWS Serayu Opak.
+          <p className="mt-1 text-[13px] text-[#5B6675]">
+            Kelola pos, pengukuran, dokumen, dan walidata Portal SIH3 BBWS Serayu Opak.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/admin/pengukuran"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-[#0A2140] font-semibold text-sm transition-colors shadow-sm"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>Input Pengukuran Baru</span>
+        <Link
+          href="/admin/pengukuran"
+          className="inline-flex h-9 items-center rounded-[6px] border border-[#14396A] bg-[#14396A] px-4 text-[13px] font-semibold text-white hover:bg-[#0E2A4E]"
+        >
+          Input pengukuran
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {tiles.map((t) => (
+          <div key={t.label} className={`${card} p-4 sm:p-5`}>
+            <p className="text-[12px] font-medium text-[#5B6675]">{t.label}</p>
+            <p className="mt-1 text-[28px] font-semibold leading-tight tabular-nums text-[#1B2430]">{fmt(t.value)}</p>
+            <Link href={t.href} className="mt-2 inline-block text-[13px] font-medium text-[#0B5CAD] hover:text-[#14396A] hover:underline">
+              {t.link} &rarr;
+            </Link>
+          </div>
+        ))}
+      </div>
+
+      <section className={card}>
+        <div className="flex items-baseline justify-between gap-3 border-b border-[#D5DBE3] px-4 py-3 sm:px-5">
+          <h2 className="text-[15px] font-semibold text-[#1B2430]">Pos per bidang</h2>
+          <Link href="/admin/pos" className="text-[13px] font-medium text-[#0B5CAD] hover:underline">
+            Lihat semua pos &rarr;
           </Link>
         </div>
-      </div>
-
-      {/* Main Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Pos Card */}
-        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-          <div>
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Pos Pemantauan
-            </div>
-            <div className="text-2xl font-bold text-gray-900 mt-1">
-              {loading ? "..." : stats.totalPos}
-            </div>
-            <Link
-              href="/admin/pos"
-              className="text-xs text-[#14396A] hover:underline font-medium inline-flex items-center gap-1 mt-2"
-            >
-              Kelola Pos &rarr;
-            </Link>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-            <Radio className="w-6 h-6" />
-          </div>
-        </div>
-
-        {/* Walidata Card */}
-        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-          <div>
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Mitra Walidata
-            </div>
-            <div className="text-2xl font-bold text-gray-900 mt-1">
-              {loading ? "..." : stats.walidataCount}
-            </div>
-            <Link
-              href="/admin/walidata"
-              className="text-xs text-[#14396A] hover:underline font-medium inline-flex items-center gap-1 mt-2"
-            >
-              Kelola Walidata &rarr;
-            </Link>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-            <Building2 className="w-6 h-6" />
-          </div>
-        </div>
-
-        {/* Dokumen Card */}
-        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-          <div>
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Dokumen Publikasi
-            </div>
-            <div className="text-2xl font-bold text-gray-900 mt-1">
-              {loading ? "..." : stats.dokumenCount}
-            </div>
-            <Link
-              href="/admin/dokumen"
-              className="text-xs text-[#14396A] hover:underline font-medium inline-flex items-center gap-1 mt-2"
-            >
-              Kelola Dokumen &rarr;
-            </Link>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-            <FileText className="w-6 h-6" />
-          </div>
-        </div>
-
-        {/* Sensor Measurements Card */}
-        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-          <div>
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Rekaman Sensor
-            </div>
-            <div className="text-2xl font-bold text-gray-900 mt-1">
-              {loading ? "..." : stats.pengukuranCount.toLocaleString("id-ID")}
-            </div>
-            <Link
-              href="/admin/pengukuran"
-              className="text-xs text-[#14396A] hover:underline font-medium inline-flex items-center gap-1 mt-2"
-            >
-              Input & Pantau &rarr;
-            </Link>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-            <Activity className="w-6 h-6" />
-          </div>
-        </div>
-      </div>
-
-      {/* Rincian Pos Sesuai Beranda (Hidrologi, Hidrometeorologi, Hidrogeologi) */}
-      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-          <div>
-            <h2 className="text-base font-bold text-gray-900">
-              Pos Pemantauan
-            </h2>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Stasiun data hidrologi, hidrometeorologi, dan hidrogeologi.
-            </p>
-          </div>
-          <Link
-            href="/admin/pos"
-            className="text-xs text-[#14396A] font-semibold hover:underline"
-          >
-            Lihat Semua Pos &rarr;
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
-          {/* Hidrologi */}
-          <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-blue-900 uppercase tracking-wider">
-                <Droplets className="w-4 h-4 text-blue-600" />
-                <span>Hidrologi</span>
-              </div>
-              <div className="text-3xl font-bold text-blue-950 mt-1">
-                {loading ? "..." : stats.hidrologiPos}
-              </div>
-              <div className="text-xs text-blue-700/80 mt-1">
-                Pos Duga Air & Kualitas Air
-              </div>
-            </div>
-          </div>
-
-          {/* Hidrometeorologi */}
-          <div className="rounded-xl border border-amber-100 bg-amber-50/40 p-4 flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 uppercase tracking-wider">
-                <CloudRain className="w-4 h-4 text-amber-600" />
-                <span>Hidrometeorologi</span>
-              </div>
-              <div className="text-3xl font-bold text-amber-950 mt-1">
-                {loading ? "..." : stats.hidrometeorologiPos}
-              </div>
-              <div className="text-xs text-amber-700/80 mt-1">
-                Pos Curah Hujan & Iklim
-              </div>
-            </div>
-          </div>
-
-          {/* Hidrogeologi */}
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4 flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-900 uppercase tracking-wider">
-                <Layers className="w-4 h-4 text-emerald-600" />
-                <span>Hidrogeologi</span>
-              </div>
-              <div className="text-3xl font-bold text-emerald-950 mt-1">
-                {loading ? "..." : stats.hidrogeologiPos}
-              </div>
-              <div className="text-xs text-emerald-700/80 mt-1">
-                Sumur Pantau Air Tanah
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Action Guides */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-            
-            <span>Panduan Operasional Cepat</span>
-          </h2>
-          <ul className="space-y-3 text-sm text-gray-600">
-            <li className="flex items-start gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+        <ul className="divide-y divide-[#E9EDF2]">
+          {bidang.map((b) => (
+            <li key={b.nama} className="flex items-center justify-between gap-3 px-4 py-3 sm:px-5">
               <div>
-                <strong>Tambah Titik Pos:</strong> Tambahkan koordinat dan jenis pos (AWLR / ARR / MAT) baru di tab <Link href="/admin/pos" className="text-[#14396A] font-semibold underline">Pos Pemantauan</Link>.
+                <p className="text-[14px] font-semibold text-[#1B2430]">{b.nama}</p>
+                <p className="text-[12px] text-[#5B6675]">{b.ket}</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-[20px] font-semibold tabular-nums text-[#1B2430]">{fmt(b.value)}</span>
+                <Link
+                  href={b.href}
+                  target="_blank"
+                  className="hidden text-[13px] font-medium text-[#0B5CAD] hover:underline sm:inline"
+                >
+                  Lihat di portal
+                </Link>
               </div>
             </li>
-            <li className="flex items-start gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-              <div>
-                <strong>Catat TMA & Hujan:</strong> Masukkan angka hasil rekaman sensor atau pengukuran manual di menu <Link href="/admin/pengukuran" className="text-[#14396A] font-semibold underline">Pengukuran</Link>.
-              </div>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-              <div>
-                <strong>Upload SOP / Laporan:</strong> Perbarui direktori unduhan berkas publik pada menu <Link href="/admin/dokumen" className="text-[#14396A] font-semibold underline">Dokumen Publikasi</Link>.
-              </div>
-            </li>
-          </ul>
-        </div>
+          ))}
+        </ul>
+      </section>
 
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-            
-            <span>Integritas Jaringan Walidata</span>
-          </h2>
-          <p className="text-sm text-gray-600 leading-relaxed">
-            Data SIH3 dikoordinasikan secara berkala bersama mitra walidata (BBWS SO, BMKG DIY & Jateng, Pusdataru Jateng, DPUPESDM DIY, DLHK DIY, & PJT I). Pastikan kontak WhatsApp & tautan layanan data instansi selalu mutakhir.
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <section className={`${card} p-5`}>
+          <h2 className="text-[15px] font-semibold text-[#1B2430]">Panduan singkat</h2>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-[14px] leading-relaxed text-[#3D4756] marker:font-semibold marker:text-[#5B6675]">
+            <li>
+              Tambah pos baru beserta koordinat dan jenis alat (AWLR / ARR / MAT) di{" "}
+              <Link href="/admin/pos" className="font-medium text-[#0B5CAD] hover:underline">Pos Pemantauan</Link>.
+            </li>
+            <li>
+              Catat TMA dan curah hujan, manual atau impor CSV, di{" "}
+              <Link href="/admin/pengukuran" className="font-medium text-[#0B5CAD] hover:underline">Pengukuran</Link>.
+            </li>
+            <li>
+              Unggah SOP, regulasi, atau laporan di{" "}
+              <Link href="/admin/dokumen" className="font-medium text-[#0B5CAD] hover:underline">Dokumen</Link>.
+            </li>
+          </ol>
+        </section>
+
+        <section className={`${card} p-5`}>
+          <h2 className="text-[15px] font-semibold text-[#1B2430]">Data walidata</h2>
+          <p className="mt-3 text-[14px] leading-relaxed text-[#3D4756]">
+            Kontak WhatsApp dan tautan permintaan data tampil langsung di halaman Walidata publik.
+            Periksa secara berkala agar tetap mutakhir.
           </p>
-          <div className="pt-2">
-            <Link
-              href="/admin/walidata"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-gray-800 text-sm font-semibold transition-colors"
-            >
-              <span>Periksa Profil Mitra</span>
-              <ExternalLink className="w-4 h-4 text-gray-500" />
-            </Link>
-          </div>
-        </div>
+          <Link
+            href="/admin/walidata"
+            className="mt-4 inline-flex h-8 items-center rounded-[6px] border border-[#AEB8C5] bg-white px-3 text-[13px] font-medium text-[#1B2430] hover:bg-[#F0F3F7]"
+          >
+            Periksa walidata
+          </Link>
+        </section>
       </div>
     </div>
   );

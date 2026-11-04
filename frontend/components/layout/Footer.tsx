@@ -2,21 +2,35 @@ import React from "react";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 
-const ORIGINAL_SITE = "https://sih3.bbwsserayuopak.id";
-
-const DATA_LINKS = [
-  { label: "Hidrologi", href: "/hidrologi" },
-  { label: "Hidrometeorologi", href: "/hidrometeorologi" },
-  { label: "Hidrogeologi", href: "/hidrogeologi" },
-  { label: "Walidata", href: "/walidata" },
-  { label: "FloodRouting", href: "/floodrouting" },
-];
-
-const GALLERY_LINKS = [
-  { label: "Buletin", href: `${ORIGINAL_SITE}/info/buletin`, external: true },
-  { label: "Peta", href: `${ORIGINAL_SITE}/info/galeripeta`, external: true },
-  { label: "Album Kegiatan", href: `${ORIGINAL_SITE}/info/album`, external: true },
-  { label: "Dokumen", href: "/publikasi" },
+/** Grup tautan mengikuti struktur navbar agar navigasi konsisten. */
+const FOOTER_GROUPS = [
+  {
+    title: "SIH3",
+    links: [
+      { label: "Status Pos Pemantauan", href: "/pos" },
+      { label: "Hidrologi", href: "/hidrologi" },
+      { label: "Hidrometeorologi", href: "/hidrometeorologi" },
+      { label: "Hidrogeologi", href: "/hidrogeologi" },
+    ],
+  },
+  {
+    title: "Layanan",
+    links: [
+      { label: "FloodRouting", href: "/floodrouting" },
+      { label: "Walidata", href: "/walidata" },
+      { label: "Analisis Data", href: "/analisis-data" },
+      { label: "Unduh Data", href: "/data-explorer" },
+    ],
+  },
+  {
+    title: "Galeri",
+    links: [
+      { label: "Buletin", href: "/galeri/buletin" },
+      { label: "Peta", href: "/galeri/peta" },
+      { label: "Album Kegiatan", href: "/galeri/album" },
+      { label: "Dokumen", href: "/galeri/dokumen" },
+    ],
+  },
 ];
 
 export function Footer() {
@@ -24,9 +38,9 @@ export function Footer() {
 
   return (
     <footer className="bg-[#0A2140] text-white">
-      <Container className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-9 pb-6">
+      <Container className="grid grid-cols-2 gap-8 pt-9 pb-6 md:grid-cols-5">
         {/* Kolom 1: Profil instansi */}
-        <div className="md:col-span-2">
+        <div className="col-span-2">
           <div className="font-semibold text-base mb-1.5 text-white">
             Balai Besar Wilayah Sungai Serayu Opak
           </div>
@@ -36,54 +50,23 @@ export function Footer() {
           </p>
         </div>
 
-        {/* Kolom 2: Data SIH3 */}
-        <div>
-          <div className="font-semibold text-base mb-1.5 text-white">
-            Data SIH3
-          </div>
-          <ul className="space-y-1 text-[14px]">
-            {DATA_LINKS.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.href}
-                  className="block py-0.5 text-[#C9D6E8] hover:text-white transition-colors"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Kolom 3: Galeri */}
-        <div>
-          <div className="font-semibold text-base mb-1.5 text-white">
-            Galeri
-          </div>
-          <ul className="space-y-1 text-[14px]">
-            {GALLERY_LINKS.map((link) => (
-              <li key={link.label}>
-                {link.external ? (
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="block py-0.5 text-[#C9D6E8] hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                ) : (
+        {FOOTER_GROUPS.map((group) => (
+          <nav key={group.title} aria-label={`Tautan ${group.title}`}>
+            <div className="mb-1.5 text-base font-semibold text-white">{group.title}</div>
+            <ul className="space-y-1 text-[14px]">
+              {group.links.map((link) => (
+                <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="block py-0.5 text-[#C9D6E8] hover:text-white transition-colors"
+                    className="block py-0.5 text-[#C9D6E8] transition-colors hover:text-white"
                   >
                     {link.label}
                   </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
       </Container>
 
       {/* Copyright strip */}

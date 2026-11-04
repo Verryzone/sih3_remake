@@ -145,7 +145,7 @@ function PemantauanPosContent() {
     <>
       {/* 1. HERO SECTION KONSISTEN DENGAN PORTAL SIH3 */}
       <DatasetHero
-        kicker="Portal SIH3 Wilayah Sungai Serayu Opak"
+        kicker="SIH3"
         title="Status Pos Pemantauan"
         description="Pusat pemantauan status keaktifan alat, persebaran stasiun pos hidrologi, hidrometeorologi, dan hidrogeologi di wilayah kerja BBWS Serayu Opak."
       />

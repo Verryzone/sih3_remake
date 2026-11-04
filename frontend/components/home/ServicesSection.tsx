@@ -20,7 +20,7 @@ const SERVICES = [
   {
     title: "Dokumen",
     subtitle: "SOP dan regulasi",
-    href: "/publikasi",
+    href: "/galeri/dokumen",
     external: false,
   },
   {

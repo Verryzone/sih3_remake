@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
 
@@ -34,95 +33,74 @@ export default function AdminLoginPage() {
     }
   };
 
+  const inputCls =
+    "h-10 w-full rounded-[6px] border border-[#AEB8C5] bg-white px-3 text-[14px] text-[#1B2430] placeholder:text-[#8A96A6] focus:border-[#0B5CAD] focus:outline-none focus:ring-2 focus:ring-[#0B5CAD]/20";
+
   return (
-    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[#F4F6F9]">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-[#D5DBE3]">
-        <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-[#0A2140]/10 flex items-center justify-center text-[#0A2140]">
-              <ShieldCheck className="w-9 h-9 text-[#14396A]" />
-            </div>
-          </div>
-          <h2 className="text-2xl font-bold tracking-tight text-[#0E2A4E]">
-            Masuk Panel Admin SIH3
-          </h2>
-          <p className="mt-2 text-sm text-[#5B6675]">
-            Sistem Informasi Hidrologi, Hidrometeorologi, & Hidrogeologi
-          </p>
-        </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-page px-4 py-12">
+      <Image
+        src="/brand/logo-header.png"
+        alt="Portal SIH3 — Wilayah Sungai Serayu-Bogowonto dan Progo-Opak-Serang"
+        width={363}
+        height={60}
+        priority
+        className="mb-6 h-11 w-auto"
+      />
+
+      <div className="w-full max-w-sm rounded-[8px] border border-[#D5DBE3] bg-white p-6 sm:p-7">
+        <h1 className="text-[20px] font-semibold text-[#1B2430]">Masuk Panel Kelola</h1>
+        <p className="mt-1 text-[13px] text-[#5B6675]">Khusus pengelola data BBWS Serayu Opak.</p>
 
         {errorMsg && (
-          <div className="rounded-lg bg-red-50 p-3.5 border border-red-200 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-            <div className="text-sm text-red-800">{errorMsg}</div>
+          <div role="alert" className="mt-4 rounded-[6px] border border-[#E88B84] bg-[#FBE3E1] px-3 py-2.5 text-[13px] text-[#8B1A12]">
+            {errorMsg}
           </div>
         )}
 
-        <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
+        <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-semibold text-[#1B2430] mb-1.5">
-              Alamat Email
+            <label htmlFor="email" className="mb-1.5 block text-[13px] font-medium text-[#1B2430]">
+              Email
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                <Mail className="w-5 h-5" />
-              </div>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Masukkan alamat email Anda"
-                className="w-full pl-10 pr-3.5 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#14396A] focus:border-transparent"
-              />
-            </div>
+            <input
+              id="email"
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={inputCls}
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-[#1B2430] mb-1.5">
-              Kata Sandi
+            <label htmlFor="password" className="mb-1.5 block text-[13px] font-medium text-[#1B2430]">
+              Kata sandi
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                <Lock className="w-5 h-5" />
-              </div>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Masukkan kata sandi Anda"
-                className="w-full pl-10 pr-3.5 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#14396A] focus:border-transparent"
-              />
-            </div>
+            <input
+              id="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={inputCls}
+            />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-[#0E2A4E] hover:bg-[#14396A] text-white text-sm font-semibold shadow-md transition-all disabled:opacity-60 cursor-pointer"
+            className="inline-flex h-10 w-full items-center justify-center rounded-[6px] bg-[#14396A] text-[14px] font-semibold text-white transition-colors hover:bg-[#0E2A4E] disabled:opacity-60"
           >
-            {loading ? (
-              <span>Memverifikasi...</span>
-            ) : (
-              <>
-                <span>Masuk Sekarang</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
+            {loading ? "Memverifikasi…" : "Masuk"}
           </button>
         </form>
-
-        <div className="pt-2 text-center">
-          <Link
-            href="/"
-            className="text-xs text-[#5B6675] hover:text-[#0E2A4E] hover:underline"
-          >
-            &larr; Kembali ke Beranda SIH3
-          </Link>
-        </div>
       </div>
+
+      <Link href="/" className="mt-5 text-[13px] text-[#5B6675] hover:text-[#0B5CAD]">
+        &larr; Kembali ke portal
+      </Link>
     </div>
   );
 }
-

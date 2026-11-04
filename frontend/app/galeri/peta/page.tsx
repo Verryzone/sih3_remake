@@ -1,6 +1,12 @@
 "use client";
 
+import type React from "react";
+
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { ChevronRight, X } from "lucide-react";
+import { DatasetHero } from "@/components/dataset/DatasetHero";
+import { Container } from "@/components/layout/Container";
 
 type Peta = {
   id: number;
@@ -401,104 +407,116 @@ export default function GaleriPetaPage() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [terpilih]);
 
+  const pill = "inline-flex h-8 items-center rounded-full px-3 text-[13px] font-medium";
+  const btnOutline =
+    "inline-flex h-8 items-center rounded-[6px] border border-[#AEB8C5] bg-white px-3 text-[13px] font-medium text-[#1B2430] hover:bg-[#F0F3F7] disabled:cursor-not-allowed disabled:opacity-40";
+  const btnPrimary =
+    "inline-flex h-8 items-center rounded-[6px] border border-[#14396A] bg-[#14396A] px-3 text-[13px] font-semibold text-white hover:bg-[#0E2A4E]";
+
   return (
-    <main className="min-h-screen bg-slate-50 pb-16">
-      
-      <header
-        className="relative flex min-h-[300px] items-center justify-center overflow-hidden bg-cover bg-center px-4 py-16 text-center text-white sm:min-h-[350px]"
-        style={{
-          backgroundImage:
-            
-"linear-gradient(rgba(8, 22, 40, 0.68), rgba(8, 22, 40, 0.68)), url('/images/hero-bendungan.jpg')",
+    <>
+      <DatasetHero
+        kicker="Galeri"
+        title="Galeri Peta"
+        description="Peta hidrologi, analisa curah hujan, dan cekungan air tanah Wilayah Sungai Serayu Opak."
+      />
 
-        }}
-      >
-        <div className="relative z-10 mx-auto max-w-4xl">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
-            PORTAL SIH3
-          </p>
-
-          <h1 className="mt-3 text-3xl font-bold sm:text-4xl">
-            Galeri Peta
-          </h1>
-
-          <div className="mx-auto mt-5 h-1 w-10 bg-yellow-400" />
-
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-200 sm:text-base">
-            Peta hidrologi, analisa curah hujan, dan cekungan air tanah
-            Wilayah Sungai Serayu Opak.
-          </p>
-        </div>
-      </header>
-
-
-      <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
-        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-teal-700">Galeri Peta</p>
-        <h2 className="text-2xl font-bold text-slate-900">Koleksi peta</h2>
-        <p className="mt-2 text-sm text-slate-600">Klik peta untuk melihat ukuran penuh dan membuka file aslinya.</p>
-
-        <div className="mt-6 flex flex-wrap gap-2 border-b border-slate-200 pb-5">
-          {kategoriPeta.map((nama) => (
-            <button key={nama} type="button" onClick={() => { setKategori(nama); setHalaman(1); }}
-              aria-pressed={kategori === nama}
-              className={`rounded-md border px-4 py-2 text-sm font-medium transition ${kategori === nama ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-slate-400"}`}>
-              {nama}
-            </button>
-          ))}
-        </div>
-
-        <p className="mt-5 text-sm text-slate-500">Menampilkan {tampil.length} dari {tersaring.length} peta</p>
-        <div className="mt-5 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {tampil.map((peta) => (
-            <article key={peta.id} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
-              <button type="button" onClick={() => setTerpilih(peta)} className="block w-full bg-slate-100 p-3" aria-label={`Lihat ${peta.judul}`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={peta.gambar} alt={peta.judul} loading="lazy" className="aspect-[4/3] w-full object-contain" />
-              </button>
-              <div className="p-5">
-                <p className="text-xs font-bold uppercase tracking-wide text-blue-700">{peta.kategori}</p>
-                <h3 className="mt-2 line-clamp-3 min-h-[3.75rem] text-base font-semibold leading-snug text-slate-900">{peta.judul}</h3>
-                <p className="mt-3 text-xs text-slate-500">{formatTanggal(peta.tanggal)}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <button type="button" onClick={() => setTerpilih(peta)} className="rounded-md bg-blue-700 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-800">Lihat peta</button>
-                  {peta.pdf && <a href={peta.pdf} target="_blank" rel="noopener noreferrer" className="rounded-md border border-blue-700 px-3 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50">Unduh PDF</a>}
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        {totalHalaman > 1 && (
-          <nav aria-label="Halaman galeri peta" className="mt-10 flex flex-wrap items-center justify-center gap-2">
-            <button type="button" disabled={halaman === 1} onClick={() => setHalaman((h) => Math.max(1, h - 1))} className="rounded-md border bg-white px-4 py-2 text-sm disabled:opacity-40">Sebelumnya</button>
-            {Array.from({ length: totalHalaman }, (_, index) => index + 1).map((nomor) => (
-              <button key={nomor} type="button" aria-current={halaman === nomor ? "page" : undefined} onClick={() => setHalaman(nomor)} className={`rounded-md border px-4 py-2 text-sm ${halaman === nomor ? "border-blue-700 bg-blue-700 text-white" : "bg-white text-slate-700 hover:bg-slate-100"}`}>{nomor}</button>
-            ))}
-            <button type="button" disabled={halaman === totalHalaman} onClick={() => setHalaman((h) => Math.min(totalHalaman, h + 1))} className="rounded-md border bg-white px-4 py-2 text-sm disabled:opacity-40">Berikutnya</button>
+      <main className="min-h-screen bg-page pb-16">
+        <Container className="py-8 sm:py-10">
+          <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-1.5 text-[12px] font-medium text-[#5B6675]">
+            <Link href="/" className="hover:text-[#0B5CAD]">Beranda</Link>
+            <ChevronRight aria-hidden="true" className="h-3 w-3 text-[#AEB8C5]" />
+            <span className="text-[#1B2430]">Peta</span>
           </nav>
-        )}
-      </section>
+
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B5CAD]">Peta</p>
+          <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.01em] text-[#1B2430] sm:text-[26px]">Koleksi peta</h2>
+          <p className="mt-1 text-[13px] text-[#5B6675]">
+            Menampilkan {tampil.length} dari {tersaring.length} peta. Klik peta untuk melihat ukuran penuh.
+          </p>
+
+          <div className="mt-4 mb-6 flex flex-wrap gap-2">
+            {kategoriPeta.map((nama) => (
+              <button
+                key={nama}
+                type="button"
+                onClick={() => { setKategori(nama); setHalaman(1); }}
+                aria-pressed={kategori === nama}
+                className={`${pill} ${kategori === nama ? "border border-[#14396A] bg-[#14396A] text-white" : "border border-[#AEB8C5] bg-white text-[#1B2430] hover:border-[#14396A] hover:text-[#14396A]"}`}
+              >
+                {nama}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {tampil.map((peta, index) => (
+              <article
+                key={peta.id}
+                data-reveal
+                style={{ "--reveal-delay": `${Math.min(index, 5) * 50}ms` } as React.CSSProperties}
+                className="flex flex-col overflow-hidden rounded-[8px] border border-[#D5DBE3] bg-white transition-all hover:border-[#AEB8C5] hover:shadow-[0_2px_10px_rgba(14,42,78,0.08)]"
+              >
+                <button type="button" onClick={() => setTerpilih(peta)} className="block w-full border-b border-[#E9EDF2] bg-[#F5F7FA] p-3" aria-label={`Lihat ${peta.judul}`}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={peta.gambar} alt={peta.judul} loading="lazy" className="aspect-[4/3] w-full object-contain" />
+                </button>
+                <div className="flex flex-1 flex-col p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B5CAD]">{peta.kategori}</p>
+                  <h3 className="mt-1.5 line-clamp-3 text-[14px] font-semibold leading-snug text-[#1B2430]">{peta.judul}</h3>
+                  <p className="mt-2 text-[12px] text-[#5B6675]">{formatTanggal(peta.tanggal)}</p>
+                  <div className="mt-auto flex flex-wrap gap-2 pt-4">
+                    <button type="button" onClick={() => setTerpilih(peta)} className={btnPrimary}>Lihat peta</button>
+                    {peta.pdf && <a href={peta.pdf} target="_blank" rel="noopener noreferrer" className={btnOutline}>Unduh PDF</a>}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {totalHalaman > 1 && (
+            <nav aria-label="Halaman galeri peta" className="mt-8 flex flex-wrap items-center justify-center gap-2">
+              <button type="button" disabled={halaman === 1} onClick={() => setHalaman((h) => Math.max(1, h - 1))} className={btnOutline}>Sebelumnya</button>
+              {Array.from({ length: totalHalaman }, (_, index) => index + 1).map((nomor) => (
+                <button
+                  key={nomor}
+                  type="button"
+                  aria-current={halaman === nomor ? "page" : undefined}
+                  onClick={() => setHalaman(nomor)}
+                  className={halaman === nomor ? `${btnPrimary} min-w-8 justify-center` : `${btnOutline} min-w-8 justify-center`}
+                >
+                  {nomor}
+                </button>
+              ))}
+              <button type="button" disabled={halaman === totalHalaman} onClick={() => setHalaman((h) => Math.min(totalHalaman, h + 1))} className={btnOutline}>Berikutnya</button>
+            </nav>
+          )}
+        </Container>
+      </main>
 
       {terpilih && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4" onClick={() => setTerpilih(null)}>
-          <div role="dialog" aria-modal="true" aria-label={terpilih.judul} className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
-            <div className="flex items-start justify-between gap-4 border-b p-4">
-              <h2 className="text-base font-semibold text-slate-900">{terpilih.judul}</h2>
-              <button type="button" aria-label="Tutup preview" onClick={() => setTerpilih(null)} className="rounded px-2 text-xl text-slate-600 hover:bg-slate-100">×</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A2140]/70 p-4" onClick={() => setTerpilih(null)}>
+          <div role="dialog" aria-modal="true" aria-label={terpilih.judul} className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-[8px] bg-white" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-start justify-between gap-4 border-b border-[#D5DBE3] px-4 py-3">
+              <div>
+                <h2 className="text-[14px] font-semibold text-[#1B2430]">{terpilih.judul}</h2>
+                <p className="mt-0.5 text-[12px] text-[#5B6675]">{terpilih.kategori} · {formatTanggal(terpilih.tanggal)}</p>
+              </div>
+              <button type="button" aria-label="Tutup pratinjau" onClick={() => setTerpilih(null)} className="shrink-0 rounded-[6px] p-1.5 text-[#5B6675] hover:bg-[#F0F3F7] hover:text-[#1B2430]">
+                <X className="h-5 w-5" />
+              </button>
             </div>
-            <div className="overflow-y-auto p-5">
+            <div className="overflow-y-auto bg-[#F5F7FA] p-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={terpilih.gambar} alt={terpilih.judul} className="mx-auto max-h-[65vh] max-w-full object-contain" />
-              <p className="mt-4 text-sm text-slate-500">{formatTanggal(terpilih.tanggal)}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <a href={terpilih.gambar} target="_blank" rel="noopener noreferrer" className="rounded-md bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">Buka / Simpan Gambar</a>
-                {terpilih.pdf && <a href={terpilih.pdf} target="_blank" rel="noopener noreferrer" className="rounded-md border border-blue-700 px-4 py-2 text-sm font-semibold text-blue-700">Unduh PDF</a>}
-                <button type="button" onClick={() => setTerpilih(null)} className="rounded-md border px-4 py-2 text-sm text-slate-700">Tutup</button>
-              </div>
+            </div>
+            <div className="flex flex-wrap justify-end gap-2 border-t border-[#D5DBE3] px-4 py-3">
+              {terpilih.pdf && <a href={terpilih.pdf} target="_blank" rel="noopener noreferrer" className={btnOutline}>Unduh PDF</a>}
+              <a href={terpilih.gambar} target="_blank" rel="noopener noreferrer" className={btnPrimary}>Buka gambar</a>
             </div>
           </div>
         </div>
       )}
-    </main>
+    </>
   );
 }
