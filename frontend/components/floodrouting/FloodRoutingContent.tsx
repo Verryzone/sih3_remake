@@ -27,7 +27,7 @@ export function FloodRoutingContent({
   return (
     <>
       <DatasetHero
-        kicker="Prakiraan waktu banjir"
+        kicker="Portal SIH3"
         title="Flood Routing"
         description="Perhitungan pergerakan aliran di suatu sungai untuk memperkirakan waktu tiba banjir di bagian hilir."
       />

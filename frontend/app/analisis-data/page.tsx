@@ -360,7 +360,7 @@ export default function AnalisisDataPage() {
     <>
       {/* 1. HERO SECTION DENGAN IDENTITAS PUPR */}
       <DatasetHero
-        kicker="Portal SIH3 Wilayah Sungai Serayu Opak"
+        kicker="Portal SIH3"
         title="Analisis & Perbandingan Data"
         description="Bandingkan fluktuasi dan tren pengukuran tinggi muka air, curah hujan, maupun kualitas air dari berbagai pos pemantauan secara simultan."
       />

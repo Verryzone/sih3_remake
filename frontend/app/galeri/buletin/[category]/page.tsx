@@ -2,6 +2,9 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
+import { Download, ExternalLink, X } from "lucide-react";
+import { Container } from "@/components/layout/Container";
+import { DatasetHero } from "@/components/dataset/DatasetHero";
 
 type ItemBuletinDetail = {
   id: string;
@@ -1761,94 +1764,87 @@ export default function SubBuletinPage({
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 pb-16">
-      <header className="relative bg-[#0F2238] px-4 py-16 text-center text-white sm:py-20">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
-          PORTAL SIH3
-        </p>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">
-          Buletin {info.nama}
-        </h1>
-        <div className="mx-auto mt-3 h-[3px] w-12 rounded-full bg-amber-400" />
-        <p className="mx-auto mt-4 max-w-2xl text-xs leading-relaxed text-slate-300 sm:text-sm">
-          {info.deskripsi}
-        </p>
-      </header>
-
-      <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+    <>
+      <DatasetHero
+        kicker="Galeri"
+        title={`Buletin ${info.nama}`}
+        description={info.deskripsi}
+      />
+    <main className="min-h-screen bg-page pb-16">
+      <Container as="section" className="py-8 sm:py-10">
         <div className="mb-6">
           <Link
             href="/galeri/buletin"
-            className="mb-4 inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-blue-700"
+            className="mb-4 inline-flex items-center gap-2 text-[13px] font-medium text-[#5B6675] hover:text-[#0B5CAD]"
           >
             &larr; Kembali ke Semua Buletin
           </Link>
           <div className="mt-2">
-            <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+            <h2 className="text-[22px] font-semibold tracking-[-0.01em] text-[#1B2430] sm:text-[26px]">
               Edisi {info.nama.toLowerCase()}
             </h2>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-[13px] text-[#5B6675]">
               Klik infografis untuk melihat ukuran penuh dan mengunduhnya.
             </p>
           </div>
         </div>
 
-        <div className="mb-8 flex flex-wrap items-center gap-2 border-b border-slate-200 pb-4">
+        <div className="mb-8 flex flex-wrap items-center gap-2 border-b border-[#D5DBE3] pb-4">
           <Link
             href="/galeri/buletin"
-            className="rounded-md px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-200"
+            className="inline-flex h-8 items-center rounded-full border border-[#AEB8C5] bg-white px-3 text-[13px] font-medium text-[#1B2430] hover:border-[#14396A] hover:text-[#14396A]"
           >
             Semua
           </Link>
           <Link
             href="/galeri/buletin/hidrologi"
-            className={`rounded-md px-3 py-1.5 text-xs font-medium ${
+            className={`inline-flex h-8 items-center rounded-full px-3 text-[13px] font-medium ${
               key === "hidrologi"
-                ? "bg-slate-800 text-white"
-                : "text-slate-600 hover:bg-slate-200"
+                ? "border border-[#14396A] bg-[#14396A] text-white"
+                : "border border-[#AEB8C5] bg-white text-[#1B2430] hover:border-[#14396A] hover:text-[#14396A]"
             }`}
           >
-            • Hidrologi
+            Hidrologi
           </Link>
           <Link
             href="/galeri/buletin/hidrometeorologi"
-            className={`rounded-md px-3 py-1.5 text-xs font-medium ${
+            className={`inline-flex h-8 items-center rounded-full px-3 text-[13px] font-medium ${
               key === "hidrometeorologi"
-                ? "bg-purple-700 text-white"
-                : "text-slate-600 hover:bg-slate-200"
+                ? "border border-[#14396A] bg-[#14396A] text-white"
+                : "border border-[#AEB8C5] bg-white text-[#1B2430] hover:border-[#14396A] hover:text-[#14396A]"
             }`}
           >
-            • Hidrometeorologi
+            Hidrometeorologi
           </Link>
           <Link
             href="/galeri/buletin/hidrogeologi"
-            className={`rounded-md px-3 py-1.5 text-xs font-medium ${
+            className={`inline-flex h-8 items-center rounded-full px-3 text-[13px] font-medium ${
               key === "hidrogeologi"
-                ? "bg-emerald-600 text-white"
-                : "text-slate-600 hover:bg-slate-200"
+                ? "border border-[#14396A] bg-[#14396A] text-white"
+                : "border border-[#AEB8C5] bg-white text-[#1B2430] hover:border-[#14396A] hover:text-[#14396A]"
             }`}
           >
-            • Hidrogeologi
+            Hidrogeologi
           </Link>
           <Link
             href="/galeri/buletin/kejadian"
-            className={`rounded-md px-3 py-1.5 text-xs font-medium ${
+            className={`inline-flex h-8 items-center rounded-full px-3 text-[13px] font-medium ${
               key === "kejadian"
-                ? "bg-amber-600 text-white"
-                : "text-slate-600 hover:bg-slate-200"
+                ? "border border-[#14396A] bg-[#14396A] text-white"
+                : "border border-[#AEB8C5] bg-white text-[#1B2430] hover:border-[#14396A] hover:text-[#14396A]"
             }`}
           >
-            • Kejadian Lainnya
+            Kejadian Lainnya
           </Link>
           <Link
             href="/galeri/buletin/elnino"
-            className={`rounded-md px-3 py-1.5 text-xs font-medium ${
+            className={`inline-flex h-8 items-center rounded-full px-3 text-[13px] font-medium ${
               key === "elnino"
-                ? "bg-orange-600 text-white"
-                : "text-slate-600 hover:bg-slate-200"
+                ? "border border-[#14396A] bg-[#14396A] text-white"
+                : "border border-[#AEB8C5] bg-white text-[#1B2430] hover:border-[#14396A] hover:text-[#14396A]"
             }`}
           >
-            • El Nino
+            El Nino
           </Link>
         </div>
 
@@ -1897,12 +1893,12 @@ export default function SubBuletinPage({
 
                 <div className="mt-4 flex flex-1 flex-col justify-between">
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-purple-700">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B5CAD]">
                       {item.subKategori || info.nama}
                     </span>
                     <h4
                       onClick={() => setSelectedEdisi(item)}
-                      className="mt-1 line-clamp-2 cursor-pointer text-sm font-bold leading-snug text-[#0284C7] hover:underline"
+                      className="mt-1 line-clamp-2 cursor-pointer text-sm font-semibold leading-snug text-[#1B2430] hover:text-[#0B5CAD]"
                     >
                       {item.judul}
                     </h4>
@@ -1927,7 +1923,7 @@ export default function SubBuletinPage({
                     </span>
                     <button
                       onClick={() => setSelectedEdisi(item)}
-                      className="flex items-center gap-1 font-semibold text-slate-700 hover:text-sky-600"
+                      className="flex items-center gap-1 font-semibold text-slate-700 hover:text-[#0B5CAD]"
                     >
                       <svg
                         className="h-3.5 w-3.5"
@@ -2005,12 +2001,12 @@ export default function SubBuletinPage({
 
                   <div className="mt-4 flex flex-1 flex-col justify-between">
                     <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-purple-700">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B5CAD]">
                         {item.subKategori || info.nama}
                       </span>
                       <h4
                         onClick={() => setSelectedEdisi(item)}
-                        className="mt-1 line-clamp-2 cursor-pointer text-sm font-bold leading-snug text-[#0284C7] hover:underline"
+                        className="mt-1 line-clamp-2 cursor-pointer text-sm font-semibold leading-snug text-[#1B2430] hover:text-[#0B5CAD]"
                       >
                         {item.judul}
                       </h4>
@@ -2035,7 +2031,7 @@ export default function SubBuletinPage({
                       </span>
                       <button
                         onClick={() => setSelectedEdisi(item)}
-                        className="flex items-center gap-1 font-semibold text-slate-700 hover:text-sky-600"
+                        className="flex items-center gap-1 font-semibold text-slate-700 hover:text-[#0B5CAD]"
                       >
                         <svg
                           className="h-3.5 w-3.5"
@@ -2108,12 +2104,12 @@ export default function SubBuletinPage({
 
                   <div className="mt-4 flex flex-1 flex-col justify-between">
                     <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-purple-700">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B5CAD]">
                         {item.subKategori || info.nama}
                       </span>
                       <h4
                         onClick={() => setSelectedEdisi(item)}
-                        className="mt-1 line-clamp-2 cursor-pointer text-sm font-bold leading-snug text-[#0284C7] hover:underline"
+                        className="mt-1 line-clamp-2 cursor-pointer text-sm font-semibold leading-snug text-[#1B2430] hover:text-[#0B5CAD]"
                       >
                         {item.judul}
                       </h4>
@@ -2138,7 +2134,7 @@ export default function SubBuletinPage({
                       </span>
                       <button
                         onClick={() => setSelectedEdisi(item)}
-                        className="flex items-center gap-1 font-semibold text-slate-700 hover:text-sky-600"
+                        className="flex items-center gap-1 font-semibold text-slate-700 hover:text-[#0B5CAD]"
                       >
                         <svg
                           className="h-3.5 w-3.5"
@@ -2173,7 +2169,7 @@ export default function SubBuletinPage({
                   onClick={() => handlePageChange(pageNum)}
                   className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold transition-all ${
                     currentPage === pageNum
-                      ? "bg-[#0284C7] text-white shadow-md scale-105"
+                      ? "bg-[#14396A] text-white shadow-md"
                       : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
                   }`}
                 >
@@ -2193,90 +2189,83 @@ export default function SubBuletinPage({
             </button>
           </div>
         )}
-      </section>
+      </Container>
 
       {/* MODAL POP-UP */}
       {selectedEdisi && (
         <div
           onClick={() => setSelectedEdisi(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A2140]/70 p-4"
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedEdisi.judul}
             onClick={(e) => e.stopPropagation()}
-            className="relative flex max-h-[85vh] w-full max-w-3xl flex-col overflow-y-auto rounded-3xl bg-white p-6 sm:p-8 shadow-2xl"
+            className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-[8px] bg-white"
           >
-            <button
-              onClick={() => setSelectedEdisi(null)}
-              className="absolute top-5 right-6 text-xl font-bold text-slate-400 hover:text-slate-700"
-            >
-              ✕
-            </button>
+            <div className="flex items-start justify-between gap-4 border-b border-[#D5DBE3] px-4 py-3">
+              <div className="min-w-0">
+                <h3 className="text-[14px] font-semibold leading-snug text-[#1B2430]">
+                  {selectedEdisi.judul}
+                </h3>
+                <p className="mt-0.5 text-[12px] text-[#5B6675]">
+                  {selectedEdisi.subKategori || info.nama} · {selectedEdisi.tanggalFormat}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedEdisi(null)}
+                aria-label="Tutup pratinjau"
+                className="shrink-0 rounded-[6px] p-1.5 text-[#5B6675] hover:bg-[#F0F3F7] hover:text-[#1B2430]"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
 
-            <div className="flex w-full items-center justify-center rounded-2xl bg-slate-100 p-6 sm:p-8">
+            <div className="min-h-0 flex-1 overflow-y-auto bg-[#F5F7FA] p-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={selectedEdisi.gambar}
                 alt={selectedEdisi.judul}
-                className="max-h-[380px] w-auto rounded object-contain"
+                className="mx-auto max-h-[65vh] w-auto object-contain"
               />
             </div>
 
-            <div className="mt-5 flex flex-col">
-              <h3 className="text-base font-bold text-slate-900 leading-snug">
-                {selectedEdisi.judul}
-              </h3>
-              <p className="mt-1 text-xs italic text-slate-500">
-                {selectedEdisi.tanggalFormat}
-              </p>
-
-              <div className="mt-3 border-t border-slate-100 pt-3 text-xs text-slate-700">
-                <span className="font-semibold text-slate-900">
-                  {selectedEdisi.subKategori || info.nama}
-                </span>
-                <p className="mt-0.5 text-slate-500">{selectedEdisi.judul}</p>
-              </div>
-
-              <div className="mt-5 flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap justify-end gap-2 border-t border-[#D5DBE3] px-4 py-3">
+              {selectedEdisi.linkExternal && (
                 <a
-                  href={selectedEdisi.gambar}
-                  download
-                  className="rounded-full bg-[#0284C7] px-6 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-[#0369A1]"
+                  href={selectedEdisi.linkExternal}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-[6px] border border-[#AEB8C5] bg-white px-3 text-[13px] font-medium text-[#1B2430] hover:bg-[#F0F3F7]"
                 >
-                  Download Gambar
+                  Kunjungi halaman
+                  <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
                 </a>
-
-                {selectedEdisi.pdf && (
-                  <a
-                    href={selectedEdisi.pdf}
-                    download
-                    className="rounded-full bg-[#0284C7] px-6 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-[#0369A1]"
-                  >
-                    Download PDF
-                  </a>
-                )}
-
-                {selectedEdisi.linkExternal && (
-                  <a
-                    href={selectedEdisi.linkExternal}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full bg-[#D9383A] px-6 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-[#B91C1C]"
-                  >
-                    Kunjungi Halaman &raquo;
-                  </a>
-                )}
-
-                <button
-                  onClick={() => setSelectedEdisi(null)}
-                  className="rounded-full bg-[#0284C7] px-6 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-[#0369A1]"
+              )}
+              {selectedEdisi.pdf && (
+                <a
+                  href={selectedEdisi.pdf}
+                  download
+                  className="inline-flex h-8 items-center gap-1.5 rounded-[6px] border border-[#AEB8C5] bg-white px-3 text-[13px] font-medium text-[#1B2430] hover:bg-[#F0F3F7]"
                 >
-                  Tutup
-                </button>
-              </div>
+                  Unduh PDF
+                </a>
+              )}
+              <a
+                href={selectedEdisi.gambar}
+                download
+                className="inline-flex h-8 items-center gap-1.5 rounded-[6px] border border-[#14396A] bg-[#14396A] px-3 text-[13px] font-semibold text-white hover:bg-[#0E2A4E]"
+              >
+                <Download aria-hidden="true" className="h-3.5 w-3.5" />
+                Unduh gambar
+              </a>
             </div>
           </div>
         </div>
       )}
     </main>
+    </>
   );
 }
