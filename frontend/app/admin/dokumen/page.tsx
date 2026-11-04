@@ -2,73 +2,49 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  FileText,
-  Plus,
-  Trash2,
-  Edit,
-  Download,
-  Loader2,
-  X,
-  ArrowLeft,
-  FolderOpen,
-  BookOpen,
-  FileCheck,
-  ShieldAlert,
-  BarChart3,
-  Search,
-} from "lucide-react";
+import { Download, Pencil, Trash2 } from "lucide-react";
+import { AdminModal, AdminPageHeader, IconAction, adm } from "@/components/admin/ui";
 import { API_BASE_URL } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Dokumen } from "@/lib/types";
 import { toast } from "sonner";
 
-// Daftar kategori lengkap dengan ikon dan deskripsinya
+// Daftar kategori dokumen
 const KATEGORI_OPTIONS = [
   {
     nama: "Regulasi",
     label: "Regulasi & Peraturan",
     deskripsi: "Peraturan perundang-undangan dan kebijakan resmi.",
-    icon: ShieldAlert,
-    color: "bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100",
   },
   {
     nama: "SOP",
     label: "Standar Operasional Prosedur (SOP)",
     deskripsi: "Prosedur langkah demi langkah pelaksanaan teknis dan administratif.",
-    icon: FileCheck,
-    color: "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100",
   },
   {
     nama: "Pedoman Teknis",
     label: "Pedoman Teknis",
     deskripsi: "Panduan operasional alat, instrumen, dan tata cara lapangan.",
-    icon: BookOpen,
-    color: "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100",
   },
   {
     nama: "Buletin",
     label: "Buletin Hidrologi",
     deskripsi: "Publikasi berkala, buletin informasi, dan buletin data air.",
-    icon: FolderOpen,
-    color: "bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100",
   },
   {
     nama: "Laporan",
     label: "Laporan Tahunan",
     deskripsi: "Laporan pertanggungjawaban, evaluasi, dan rekapitulasi tahunan.",
-    icon: BarChart3,
-    color: "bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100",
   },
 ];
 
 export default function AdminDokumenPage() {
   const { token } = useAuth();
   const [dokumenList, setDokumenList] = useState<Dokumen[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   
   // State untuk navigasi kategori aktif & kata kunci pencarian
-  const [activeKategori, setActiveKategori] = useState<string>("");
+  const [activeKategori, setActiveKategori] = useState<string>(KATEGORI_OPTIONS[0].nama);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Modal State
@@ -86,7 +62,6 @@ export default function AdminDokumenPage() {
 
   const fetchData = async (kategori: string) => {
     if (!kategori) return;
-    setLoading(true);
     try {
       const res = await axios.get(
         `${API_BASE_URL}/dokumen?per_page=100&kategori=${kategori}`
@@ -100,13 +75,24 @@ export default function AdminDokumenPage() {
   };
 
   useEffect(() => {
-    if (activeKategori) {
-      setSearchQuery(""); // Reset search saat ganti kategori
-      fetchData(activeKategori);
-    }
+    let aktif = true;
+    axios
+      .get(`${API_BASE_URL}/dokumen?per_page=100&kategori=${activeKategori}`)
+      .then((res) => {
+        if (aktif) setDokumenList(res.data?.data || []);
+      })
+      .catch(() => {
+        if (aktif) toast.error("Gagal memuat dokumen.");
+      })
+      .finally(() => {
+        if (aktif) setLoading(false);
+      });
+    return () => {
+      aktif = false;
+    };
   }, [activeKategori]);
 
-  const openAddModal = (defaultKategori = "Regulasi") => {
+  const openAddModal = (defaultKategori: string = KATEGORI_OPTIONS[0].nama) => {
     setEditingDokumen(null);
     setFormData({
       judul: "",
@@ -198,307 +184,198 @@ export default function AdminDokumenPage() {
     return judulMatch || deskripsiMatch || tahunMatch;
   });
 
+  const aktif = KATEGORI_OPTIONS.find((k) => k.nama === activeKategori);
+
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-            <FileText className="w-6 h-6 text-[#14396A]" />
-            <span>Dokumen Publikasi</span>
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Kelola SOP, buku pedoman teknis, peraturan perundang-undangan, dan buletin hidrologi berdasarkan kategori.
-          </p>
-        </div>
-        <button
-          onClick={() => openAddModal(activeKategori || "Regulasi")}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0E2A4E] hover:bg-[#14396A] text-white font-semibold text-sm shadow-sm transition-colors cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Unggah Dokumen Baru</span>
-        </button>
+    <div className="space-y-6">
+      <AdminPageHeader
+        kicker="Dokumen"
+        title="Dokumen publikasi"
+        description="Kelola regulasi, SOP, pedoman teknis, buletin, dan laporan yang tampil di portal."
+        actions={
+          <button type="button" onClick={() => openAddModal(activeKategori)} className={adm.btnPrimary}>
+            Unggah dokumen
+          </button>
+        }
+      />
+
+      <div className="flex flex-wrap gap-2">
+        {KATEGORI_OPTIONS.map((kat) => (
+          <button
+            key={kat.nama}
+            type="button"
+            onClick={() => {
+              if (kat.nama === activeKategori) return;
+              setLoading(true);
+              setActiveKategori(kat.nama);
+              setSearchQuery("");
+            }}
+            aria-pressed={activeKategori === kat.nama}
+            className={`${adm.pill} ${activeKategori === kat.nama ? adm.pillActive : adm.pillIdle}`}
+          >
+            {kat.label}
+          </button>
+        ))}
       </div>
 
-      {/* KONDISI 1: JIKA BELUM MEMILIH KATEGORI (TAMPILKAN DAFTAR KARTU KATEGORI) */}
-      {!activeKategori ? (
-        <div className="space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500">
-            Silakan Pilih Kategori Dokumen:
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {KATEGORI_OPTIONS.map((kat) => {
-              const IconComponent = kat.icon;
-              return (
-                <div
-                  key={kat.nama}
-                  onClick={() => setActiveKategori(kat.nama)}
-                  className="p-6 rounded-xl border transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md flex flex-col justify-between bg-white group hover:border-[#14396A]/40"
-                >
-                  <div>
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 ${kat.color}`}>
-                      <IconComponent className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#14396A] transition-colors">
-                      {kat.label}
-                    </h3>
-                    <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-                      {kat.deskripsi}
-                    </p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-[#14396A]">
-                    <span>Kelola Dokumen</span>
-                    <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
-                  </div>
-                </div>
-              );
-            })}
+      <section className={`${adm.card} overflow-hidden`}>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#D5DBE3] px-4 py-3">
+          <div>
+            <h2 className="text-[15px] font-semibold text-[#1B2430]">{aktif?.label}</h2>
+            <p className="text-[12px] text-[#5B6675]">{aktif?.deskripsi}</p>
           </div>
+          <label className="w-full sm:w-72">
+            <span className="sr-only">Cari dokumen</span>
+            <input
+              type="search"
+              placeholder="Cari judul, deskripsi, atau tahun…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={adm.input}
+            />
+          </label>
         </div>
-      ) : (
-        /* KONDISI 2: JIKA SUDAH MEMILIH KATEGORI (TAMPILKAN TABEL DATA & PENCARIAN) */
-        <div className="space-y-4">
-          {/* Tombol Kembali & Indikator Kategori */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-            <button
-              onClick={() => setActiveKategori("")}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-xs font-semibold transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Kembali ke Pilihan Kategori</span>
-            </button>
-            <div className="text-sm font-semibold text-[#14396A] bg-blue-50 px-3 py-1 rounded-full">
-              Kategori Aktif: {activeKategori}
-            </div>
-          </div>
 
-          {/* Kotak Pencarian (*Search Bar*) dalam Kategori */}
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-            <div className="relative w-full sm:w-96">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3 pointer-events-none" />
-              <input
-                type="text"
-                placeholder={`Cari judul, deskripsi, atau tahun di ${activeKategori}...`}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#14396A]"
-              />
-            </div>
-          </div>
-
-          {/* Table Data */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            {loading ? (
-              <div className="p-12 flex flex-col items-center justify-center text-gray-400">
-                <Loader2 className="w-8 h-8 animate-spin mb-2 text-[#0E2A4E]" />
-                <span className="text-sm">Memuat dokumen {activeKategori}...</span>
-              </div>
-            ) : filteredDokumenList.length === 0 ? (
-              <div className="p-12 text-center text-gray-500 text-sm space-y-3">
-                <p>
-                  {searchQuery
-                    ? `Tidak ada dokumen yang cocok dengan "${searchQuery}" pada kategori ${activeKategori}.`
-                    : `Tidak ada dokumen publikasi dalam kategori ${activeKategori}.`}
-                </p>
-                {!searchQuery && (
-                  <button
-                    onClick={() => openAddModal(activeKategori)}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    Tambah Dokumen di Kategori Ini
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-gray-700">
-                  <thead className="bg-[#0A2140] text-white text-xs uppercase font-semibold">
-                    <tr>
-                      <th className="py-3 px-4">Judul Dokumen</th>
-                      <th className="py-3 px-4">Kategori</th>
-                      <th className="py-3 px-4">Tahun</th>
-                      <th className="py-3 px-4">Format / Ukuran</th>
-                      <th className="py-3 px-4">Total Diunduh</th>
-                      <th className="py-3 px-4 text-center">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {filteredDokumenList.map((doc) => (
-                      <tr key={doc.id} className="hover:bg-gray-50/80 transition-colors">
-                        <td className="py-3 px-4">
-                          <div className="font-semibold text-gray-900">{doc.judul}</div>
-                          {doc.deskripsi && (
-                            <div className="text-xs text-gray-500 line-clamp-1 mt-0.5">
-                              {doc.deskripsi}
-                            </div>
-                          )}
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
-                            {doc.kategori}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-xs font-semibold text-gray-700">
-                          {doc.tahun}
-                        </td>
-                        <td className="py-3 px-4 text-xs uppercase text-gray-500">
-                          {doc.file_extension || "PDF"} (
-                          {doc.file_size
-                            ? `${(Number(doc.file_size) / 1024 / 1024).toFixed(1)} MB`
-                            : "1.2 MB"}
-                          )
-                        </td>
-                        <td className="py-3 px-4 text-xs font-mono font-semibold text-gray-700">
-                          {doc.download_count || 0} kali
-                        </td>
-                        <td className="py-3 px-4 text-center">
-                          <div className="inline-flex items-center gap-1.5">
-                            <a
-                              href={`${API_BASE_URL}/dokumen/${doc.id}/download`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors"
-                              title="Unduh Berkas"
-                            >
-                              <Download className="w-4 h-4" />
-                            </a>
-                            <button
-                              onClick={() => openEditModal(doc)}
-                              className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                              title="Ubah Dokumen"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(doc.id)}
-                              className="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                              title="Hapus Dokumen"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+        {loading ? (
+          <div className={adm.empty}>Memuat dokumen…</div>
+        ) : filteredDokumenList.length === 0 ? (
+          <div className={adm.empty}>
+            <p>
+              {searchQuery
+                ? `Tidak ada dokumen yang cocok dengan "${searchQuery}".`
+                : "Belum ada dokumen di kategori ini."}
+            </p>
+            {!searchQuery && (
+              <button type="button" onClick={() => openAddModal(activeKategori)} className={`${adm.btnOutline} mt-4`}>
+                Unggah dokumen
+              </button>
             )}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="overflow-x-auto">
+            <table className={adm.table}>
+              <thead className={adm.thead}>
+                <tr>
+                  <th className={adm.th}>Judul</th>
+                  <th className={adm.th}>Tahun</th>
+                  <th className={adm.th}>Berkas</th>
+                  <th className={`${adm.th} text-right`}>Diunduh</th>
+                  <th className={`${adm.th} text-right`}>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredDokumenList.map((doc) => (
+                  <tr key={doc.id} className={adm.tr}>
+                    <td className={adm.td}>
+                      <p className="text-[14px] font-semibold text-[#1B2430]">{doc.judul}</p>
+                      {doc.deskripsi && <p className="mt-0.5 line-clamp-1 text-[12px] text-[#5B6675]">{doc.deskripsi}</p>}
+                    </td>
+                    <td className={`${adm.td} tabular-nums`}>{doc.tahun}</td>
+                    <td className={`${adm.td} whitespace-nowrap`}>
+                      <span className="uppercase">{doc.file_extension || "PDF"}</span>
+                      {Number.isFinite(Number(doc.file_size)) && Number(doc.file_size) > 0
+                        ? ` · ${(Number(doc.file_size) / 1024 / 1024).toFixed(1)} MB`
+                        : ""}
+                    </td>
+                    <td className={`${adm.td} text-right tabular-nums`}>{doc.download_count || 0}</td>
+                    <td className={`${adm.td} whitespace-nowrap text-right`}>
+                      <div className="inline-flex items-center gap-0.5">
+                        <IconAction label="Unduh" icon={Download} href={`${API_BASE_URL}/dokumen/${doc.id}/download`} />
+                        <IconAction label="Ubah" icon={Pencil} onClick={() => openEditModal(doc)} />
+                        <IconAction label="Hapus" icon={Trash2} danger onClick={() => handleDelete(doc.id)} />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
 
-      {/* Modal Add/Edit */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full">
-            <div className="flex items-center justify-between p-5 border-b border-gray-100">
-              <h3 className="text-lg font-bold text-gray-900">
-                {editingDokumen ? "Ubah Data Dokumen" : "Unggah Dokumen Publikasi Baru"}
-              </h3>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
+        <AdminModal
+          title={editingDokumen ? "Ubah dokumen" : "Unggah dokumen"}
+          onClose={() => setIsModalOpen(false)}
+          footer={
+            <>
+              <button type="button" onClick={() => setIsModalOpen(false)} className={adm.btnOutline}>
+                Batal
               </button>
+              <button type="submit" form="form-dokumen" disabled={saving} className={adm.btnPrimary}>
+                {saving ? "Menyimpan…" : "Simpan"}
+              </button>
+            </>
+          }
+        >
+          <form id="form-dokumen" onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="judul" className={adm.label}>Judul</label>
+              <input
+                id="judul"
+                type="text"
+                required
+                value={formData.judul}
+                onChange={(e) => setFormData({ ...formData, judul: e.target.value })}
+                placeholder="Contoh: SOP Pemeliharaan Pos AWLR 2026"
+                className={adm.input}
+              />
             </div>
 
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Judul Dokumen *
-                </label>
+                <label htmlFor="kategori" className={adm.label}>Kategori</label>
+                <select
+                  id="kategori"
+                  value={formData.kategori}
+                  onChange={(e) => setFormData({ ...formData, kategori: e.target.value })}
+                  className={adm.input}
+                >
+                  {KATEGORI_OPTIONS.map((k) => (
+                    <option key={k.nama} value={k.nama}>{k.nama}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="tahun" className={adm.label}>Tahun terbit</label>
                 <input
-                  type="text"
+                  id="tahun"
+                  type="number"
                   required
-                  value={formData.judul}
-                  onChange={(e) => setFormData({ ...formData, judul: e.target.value })}
-                  placeholder="Contoh: SOP Pemeliharaan Pos AWLR 2026"
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
+                  value={formData.tahun}
+                  onChange={(e) => setFormData({ ...formData, tahun: e.target.value })}
+                  className={adm.input}
                 />
               </div>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Kategori Dokumen *
-                  </label>
-                  <select
-                    value={formData.kategori}
-                    onChange={(e) => setFormData({ ...formData, kategori: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-                  >
-                    <option value="Regulasi">Regulasi</option>
-                    <option value="SOP">SOP</option>
-                    <option value="Pedoman Teknis">Pedoman Teknis</option>
-                    <option value="Buletin">Buletin</option>
-                    <option value="Laporan">Laporan</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Tahun Terbit *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    value={formData.tahun}
-                    onChange={(e) => setFormData({ ...formData, tahun: e.target.value })}
-                    placeholder="2026"
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-                  />
-                </div>
-              </div>
+            <div>
+              <label htmlFor="deskripsi" className={adm.label}>Deskripsi</label>
+              <textarea
+                id="deskripsi"
+                rows={3}
+                value={formData.deskripsi}
+                onChange={(e) => setFormData({ ...formData, deskripsi: e.target.value })}
+                placeholder="Ringkasan isi dokumen"
+                className={adm.textarea}
+              />
+            </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Deskripsi / Ringkasan Dokumen
-                </label>
-                <textarea
-                  rows={3}
-                  value={formData.deskripsi}
-                  onChange={(e) => setFormData({ ...formData, deskripsi: e.target.value })}
-                  placeholder="Keterangan singkat mengenai substansi isi dokumen..."
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-[#14396A]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Berkas File (PDF / DOC / XLS / ZIP)
-                </label>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx,.xls,.xlsx,.zip"
-                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                />
-                <span className="text-[11px] text-gray-400 mt-1 block">
-                  Ukuran maksimal berkas: 20 MB. Kosongkan jika tidak mengganti berkas yang ada.
-                </span>
-              </div>
-
-              <div className="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="px-5 py-2 rounded-lg bg-[#0E2A4E] hover:bg-[#14396A] text-white text-sm font-semibold shadow-sm transition-colors disabled:opacity-60 cursor-pointer"
-                >
-                  {saving ? "Menyimpan..." : "Simpan Dokumen"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+            <div>
+              <label htmlFor="berkas" className={adm.label}>Berkas</label>
+              <input
+                id="berkas"
+                type="file"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.zip"
+                onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                className="block w-full text-[13px] text-[#3D4756] file:mr-3 file:h-8 file:rounded-[6px] file:border file:border-[#AEB8C5] file:bg-white file:px-3 file:text-[13px] file:font-medium file:text-[#1B2430] hover:file:bg-[#F0F3F7]"
+              />
+              <span className={adm.hint}>
+                PDF, DOC, XLS, atau ZIP, maksimal 20 MB.{editingDokumen ? " Kosongkan jika tidak mengganti berkas." : ""}
+              </span>
+            </div>
+          </form>
+        </AdminModal>
       )}
     </div>
   );

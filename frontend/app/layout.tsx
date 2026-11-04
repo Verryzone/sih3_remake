@@ -3,6 +3,7 @@ import { Public_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { PublicChrome } from "@/components/layout/PublicChrome";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/lib/auth-context";
@@ -55,14 +56,9 @@ export default function RootLayout({
       <head />
       <body className="flex min-h-screen flex-col bg-page text-ink antialiased">
         <AuthProvider>
-          <a href="#main-content" className="skip-link">
-            Lewati ke konten utama
-          </a>
-          <Navbar />
-          <main id="main-content" tabIndex={-1} className="flex-1">
+          <PublicChrome header={<Navbar />} footer={<Footer />}>
             {children}
-          </main>
-          <Footer />
+          </PublicChrome>
           <RevealOnScroll />
           <Toaster position="top-right" />
         </AuthProvider>
