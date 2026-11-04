@@ -42,7 +42,7 @@ export function Hero() {
                 name="q"
                 type="text"
                 placeholder="Nama pos, sungai, DAS, atau kabupaten"
-                className="h-12 flex-1 rounded-[6px] border-0 bg-white px-3.5 text-[15px] text-[#1B2430] placeholder:text-[#8A96A6] focus:outline-none focus:ring-2 focus:ring-[#F2A900]"
+                className="h-12 w-full shrink-0 rounded-[6px] border-0 bg-white px-3.5 sm:flex-1 sm:shrink text-[15px] text-[#1B2430] placeholder:text-[#8A96A6] focus:outline-none focus:ring-2 focus:ring-[#F2A900]"
               />
               <button
                 type="submit"

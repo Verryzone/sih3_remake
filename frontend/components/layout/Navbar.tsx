@@ -61,7 +61,9 @@ function isActive(entry: NavEntry, pathname: string): boolean {
   if (isGroup(entry)) return entry.items.some((item) => isActive(item, pathname));
   if (entry.external) return false;
   if (entry.href === "/") return pathname === "/";
-  return pathname === entry.href.split("?")[0];
+  const base = entry.href.split("?")[0];
+  // Sub-halaman (mis. /galeri/buletin/hidrologi, /pos/12) ikut menandai menunya.
+  return pathname === base || pathname.startsWith(`${base}/`);
 }
 
 /** useLayoutEffect warns during SSR; fall back to useEffect on the server. */
@@ -152,8 +154,11 @@ export function Navbar() {
       <div className="bg-[#0A2140] text-white text-[13px]">
         <Container className="flex items-center justify-between py-[7px]">
           <span className="truncate pr-2">
-            Situs resmi Balai Besar Wilayah Sungai Serayu Opak &middot; Direktorat
-            Jenderal Sumber Daya Air &middot; Kementerian Pekerjaan Umum
+            <span className="sm:hidden">Situs resmi BBWS Serayu Opak</span>
+            <span className="hidden sm:inline">
+              Situs resmi Balai Besar Wilayah Sungai Serayu Opak &middot; Direktorat
+              Jenderal Sumber Daya Air &middot; Kementerian Pekerjaan Umum
+            </span>
           </span>
           {user ? (
             <Link
@@ -282,7 +287,13 @@ export function Navbar() {
                         ) : (
                           <Link
                             href={item.href}
-                            className="block px-4 py-2 text-[14px] text-[#1B2430] hover:bg-[#F5F7FA] hover:text-[#14396A]"
+                            aria-current={isActive(item, pathname) ? "page" : undefined}
+                            className={cn(
+                              "block border-l-[3px] px-4 py-2 text-[14px]",
+                              isActive(item, pathname)
+                                ? "border-[#F2A900] bg-[#EEF1F5] font-semibold text-[#14396A]"
+                                : "border-transparent text-[#1B2430] hover:bg-[#F5F7FA] hover:text-[#14396A]"
+                            )}
                           >
                             {item.label}
                           </Link>
@@ -374,7 +385,13 @@ export function Navbar() {
                               <Link
                                 href={item.href}
                                 onClick={() => setMobileOpen(false)}
-                                className="block py-1.5 px-2 text-[14px] text-[#1B2430] hover:text-[#14396A]"
+                                aria-current={isActive(item, pathname) ? "page" : undefined}
+                                className={cn(
+                                  "block border-l-[3px] py-1.5 px-2 text-[14px]",
+                                  isActive(item, pathname)
+                                    ? "border-[#F2A900] bg-[#EEF1F5] font-semibold text-[#14396A]"
+                                    : "border-transparent text-[#1B2430] hover:text-[#14396A]"
+                                )}
                               >
                                 {item.label}
                               </Link>
