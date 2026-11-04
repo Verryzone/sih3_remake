@@ -19,13 +19,13 @@ Cakupan: menu yang **belum** dievaluasi. Menu yang sudah selesai dan dijadikan *
 | Menu | Route | Status | Tingkat |
 |---|---|---|---|
 | Walidata | `/walidata` | ✅ Diperbaiki (Fase 1, didesain ulang jadi tabel) | — |
-| Analisis Data | `/analisis-data` | ⚠️ Sebagian sesuai | Rendah |
+| Analisis Data | `/analisis-data` | ✅ Dirapikan (Fase 3) | — |
 | Galeri › Buletin | `/galeri/buletin` | ✅ Diperbaiki (Fase 1) | — |
 | Galeri › Peta | `/galeri/peta` | ✅ Diperbaiki (Fase 2) | — |
 | Galeri › Album Kegiatan | `/galeri/album` | ✅ Diperbaiki (Fase 1) | — |
 | Galeri › Dokumen | `/galeri/dokumen` | ✅ Diperbaiki (Fase 2) | — |
-| Data Explorer (tombol CTA navbar) | `/data-explorer` | ⚠️ Sebagian sesuai | Sedang |
-| Publikasi (link footer) | `/publikasi` | ❌ Perlu diperbaiki / duplikat | Tinggi |
+| Data Explorer (tombol CTA navbar) | `/data-explorer` | ✅ Skeleton diperbaiki (Fase 3) | — |
+| Publikasi (link footer) | `/publikasi` | ✅ Dihapus, redirect 308 ke `/galeri/dokumen` (Fase 3) | — |
 
 ## Detail per menu
 
@@ -92,3 +92,8 @@ Cakupan: menu yang **belum** dievaluasi. Menu yang sudah selesai dan dijadikan *
 2. Peta, Dokumen (cukup ganti hero + kontainer).
 3. Selesaikan duplikasi Dokumen vs Publikasi dan sinkronkan Footer.
 4. Rapikan minor Analisis Data & skeleton Data Explorer.
+
+## Status akhir (2026-11-04)
+Semua temuan audit sudah ditangani (Fase 1–4). Catatan tersisa:
+- Logo resmi BBWS SO perlu ditaruh di `frontend/public/brand/logo-bbwsso.png`.
+- Error lint lama `react-hooks/set-state-in-effect` masih ada di `app/analisis-data/page.tsx` dan `app/data-explorer/page.tsx` (di luar cakupan UI).

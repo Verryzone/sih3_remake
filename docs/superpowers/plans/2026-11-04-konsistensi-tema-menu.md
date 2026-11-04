@@ -12,3 +12,10 @@ Spec: `docs/superpowers/specs/2026-11-04-konsistensi-tema-menu-design.md`
 - [x] 6. Peta (`app/galeri/peta/page.tsx`): hero inline → `DatasetHero`; `Container`; `bg-page`; tombol biru → primary; kartu & filter sesuai Revisi 1.
 - [x] 7. Dokumen (`app/galeri/dokumen/page.tsx`): hero inline → `DatasetHero`; `max-w-6xl px-5` → `Container`; sky → palet PUPR; kartu sesuai Revisi 1.
 - [x] 8. Verifikasi eslint + tsc; update audit.
+
+## Fase 3
+- [x] 9. Redirect permanen `/publikasi` → `/galeri/dokumen` (next.config), hapus halaman duplikat.
+- [x] 10. Footer: link Galeri internal, tambah Status Pos & Analisis Data, urutan mengikuti navbar.
+- [x] 11. Analisis Data: ganti `bg-slate-*`/`rounded-md`/hex hardcode ke token.
+- [x] 12. Data Explorer: skeleton `max-w-7xl` → `max-w-site`.
+- [x] 13. Verifikasi eslint + tsc; update audit.

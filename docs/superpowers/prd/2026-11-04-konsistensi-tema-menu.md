@@ -34,3 +34,9 @@ Di luar cakupan (fase berikutnya): Peta, Dokumen, Publikasi/duplikasi, Footer, A
 
 ## Fase 2 (2026-11-04)
 Cakupan: Galeri › Peta (`/galeri/peta`) dan Galeri › Dokumen (`/galeri/dokumen`). Kebutuhan R1–R7 berlaku, ditambah Revisi 1 spec (satu aksen, kartu gaya Beranda, tab pill `DatasetPage`).
+
+## Fase 3 (2026-11-04)
+Cakupan:
+1. Duplikasi `/publikasi` vs `/galeri/dokumen` → satu halaman resmi (`/galeri/dokumen`), `/publikasi` dialihkan permanen.
+2. Footer disinkronkan dengan navbar (semua link internal, struktur grup sama).
+3. Sisa minor: Analisis Data (warna/radius), skeleton Data Explorer (lebar sama dengan konten).

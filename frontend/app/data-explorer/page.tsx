@@ -14,10 +14,10 @@ import { Pos, Walidata } from "@/lib/types";
 
 function DataExplorerLoadingSkeleton() {
   return (
-    <div className="min-h-screen bg-slate-50/70 pb-20">
+    <div className="min-h-screen bg-page pb-20">
       {/* Header Skeleton */}
-      <div className="bg-white border-b border-slate-200/90 py-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto space-y-4">
+      <div className="bg-white border-b border-[#D5DBE3] pt-6 pb-7 px-4 sm:px-6">
+        <div className="mx-auto w-full max-w-site space-y-4">
           <Skeleton className="h-4 w-48 rounded" />
           <Skeleton className="h-8 w-80 rounded-lg" />
           <Skeleton className="h-4 w-96 rounded" />
@@ -25,9 +25,9 @@ function DataExplorerLoadingSkeleton() {
       </div>
 
       {/* Main Content Skeleton */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-6">
-        <Skeleton className="h-32 w-full rounded-2xl" />
-        <Skeleton className="h-96 w-full rounded-2xl" />
+      <div className="mx-auto w-full max-w-site px-4 sm:px-6 pt-6 space-y-4">
+        <Skeleton className="h-32 w-full rounded-[8px]" />
+        <Skeleton className="h-96 w-full rounded-[8px]" />
       </div>
     </div>
   );
