@@ -143,11 +143,6 @@ function WalidataDirectoryContent() {
 
   return (
     <>
-      <DatasetHero
-        kicker="Portal SIH3"
-        title="Direktori Walidata"
-        description="Instansi yang mengelola dan menyediakan data hidrologi, hidrometeorologi, dan hidrogeologi di Wilayah Sungai Serayu Opak dan Serayu Bogowonto."
-      />
 
       <main className="min-h-screen bg-page pb-16 text-[#1B2430]">
         <Container className="py-8 sm:py-10">
@@ -349,10 +344,30 @@ function WalidataDirectoryContent() {
   );
 }
 
+/**
+ * Hero dirender di luar Suspense agar ikut dikirim server; fallback berupa
+ * kerangka tabel supaya tinggi halaman tidak melompat (CLS) saat konten
+ * klien (yang membaca ?q=) selesai dimuat.
+ */
 export default function WalidataPage() {
   return (
-    <Suspense fallback={null}>
-      <WalidataDirectoryContent />
-    </Suspense>
+    <>
+      <DatasetHero
+        kicker="Portal SIH3"
+        title="Direktori Walidata"
+        description="Instansi yang mengelola dan menyediakan data hidrologi, hidrometeorologi, dan hidrogeologi di Wilayah Sungai Serayu Opak dan Serayu Bogowonto."
+      />
+      <Suspense
+        fallback={
+          <main className="min-h-screen bg-page pb-16">
+            <Container className="py-8 sm:py-10">
+              <TableSkeleton />
+            </Container>
+          </main>
+        }
+      >
+        <WalidataDirectoryContent />
+      </Suspense>
+    </>
   );
 }
